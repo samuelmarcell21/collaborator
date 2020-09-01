@@ -168,173 +168,21 @@ def search(request):
     if request.method == 'POST':
         global catch
         catch = request.POST['title']
-        data = [catch]
-        
-        stop_words = stopwords.words('indonesian')
-        stop_words2 = stopwords.words('english')
-        stop_words.extend(stop_words2)
-        stop_words.extend(['of','in','and','the','for','on','using','based','from','with','to','by','as','an','pengaruh'
-                        ,'effect','analisis','at','pre','pro','analysis','berbasis','tahun','between','kualitas','method',
-                        'metode','through','menggunakan','hasil'])
-        
-        # Remove Numbers
-        data = [re.sub(" \d+",' ', sent) for sent in data]
-        data = [re.sub('[^a-zA-Z]',' ', sent) for sent in data]
 
-        # Remove new line characters
-        data = [re.sub('\s+', ' ', sent) for sent in data]
-
-        # Remove distracting single quotes
-        data = [re.sub("\'", "", sent) for sent in data]
-
-        def sent_to_words(sentences):
-            for sentence in sentences:
-                yield(gensim.utils.simple_preprocess(str(sentence), deacc=True))  # deacc=True removes punctuations
-
-        coba = sent_to_words(data)
-        data_words = list(coba)
-
-        # Build the bigram and trigram models
-        bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100) # higher threshold fewer phrases.
-        trigram = gensim.models.Phrases(bigram[data_words], threshold=100)  
-
-        # Faster way to get a sentence clubbed as a trigram/bigram
-        bigram_mod = gensim.models.phrases.Phraser(bigram)
-        trigram_mod = gensim.models.phrases.Phraser(trigram)
-
-        # Define functions for stopwords, bigrams, trigrams and lemmatization
-        # from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-        def remove_stopwords(texts):
-            return [[word for word in simple_preprocess(str(doc)) if word not in (stop_words or stop_words2)] for doc in texts]
-
-        def make_bigrams(texts):
-            return [bigram_mod[doc] for doc in texts]
-
-        def make_trigrams(texts):
-            return [trigram_mod[bigram_mod[doc]] for doc in texts]
-
-        def lemmatization(texts):
-            """https://spacy.io/api/annotation"""
-            texts_out = []
-            for sent in texts:
-                doc = nlp(" ".join(sent)) 
-                texts_out.append([token.lemma_ for token in doc])
-            return texts_out
-
-        # Remove Stop Words
-        data_words_nostops = remove_stopwords(data_words)
-
-        # # Form Bigrams
-        data_words_bigrams = make_bigrams(data_words_nostops)
-
-        nlp = spacy.load('en_core_web_sm')
-
-        data_lemmatized = lemmatization(data_words_bigrams)
-
-        #stem masing-masing kata yang ada
-        factory = StemmerFactory()
-        stemmer = factory.create_stemmer()
-
-        for x in range(len(data_lemmatized)-1):
-            for y in range(len(data_lemmatized[x])-1):
-                data_lemmatized[x][y] = stemmer.stem(data_lemmatized[x][y])
-
-        id2wordd = corpora.Dictionary(data_lemmatized)
-        # Create Corpus
-        texts = data_lemmatized
-        # Term Document Frequency
-        corpuss = [id2wordd.doc2bow(text) for text in texts]
-
-        id2word = Dictionary.load('pdupt_website/id2word_new.dict')
-        corpus = MmCorpus('pdupt_website/corpus_new.mm')
-
-        # import gensim
-        model = gensim.models.ldamodel.LdaModel.load('pdupt_website/mallet_18_lda.mdl', mmap='r') 
-        new_doc_bow = id2word.doc2bow(data_lemmatized[0])
-        hasil = model.get_document_topics(new_doc_bow)
-
-        topic=0
-        nilai =-99
-        for i, row in (hasil):
-            if(row>nilai):
-                topic=i
-                nilai=row
-        
-        keywords=[]
-        
-        for i,nilai in model.show_topic(topic):
-            keywords.append(i)
-
-        # topics = Topics.objects.filter(id_topic=topic).values_list('id_publication', flat=True)
-
-        #load data
-        df = pd.read_csv('pdupt_website/label18baru.csv')
-        with open("pdupt_website/lemma_new.txt", "rb") as fp:   #Pickling
-            data_lemmatizedd=pickle.load(fp)
-
-        #init tempat menyimpan hasil
-        hasil_cosine_keseluruhan=[]
-        hasil_cosine=[]
-
-        #mengambil data yang sesuai dengan topik
-        # topic=df
-        topik=df.loc[df['Topic1'] == topic]
-
-        ##membuat data lemma, corpus dan dictionary berdasarkan data dalam 1 topik
-        res_list = [data_lemmatizedd[i] for i in topik.index] 
-        # Create Dictionary
-        id2worddd = corpora.Dictionary(res_list)
-
-        # Create Corpus
-        texts = res_list
-
-        # Term Document Frequency
-        corpusss = [id2worddd.doc2bow(text) for text in res_list]
-
-        #menghitung cosine sim judul dibandingkan dengan keseluruhan judul yang ada
-
-        index_tmpfile = get_tmpfile("index")
-        index = Similarity(index_tmpfile,corpusss, num_features=len(id2worddd))
-
-        index = MatrixSimilarity(corpusss, num_features=len(id2worddd))
-        sims = index[corpuss]
-
-        sort_index = np.argsort(sims[0])
-
-        reversed_arr = sort_index[::-1]
-
-        hasil = pd.DataFrame(reversed_arr)
-
-        hasilbaru = hasil.iloc[:40,:]
-
-        hasilmantep = hasilbaru.to_numpy()
-
-        idfix=[]
-        for i in range(0,40):
-            idfix.append(hasilmantep[i][0])
-
-        ngetest = topik.to_numpy()
-
-        id_artikel = []
-        for i in idfix:
-            id_artikel.append(ngetest[i][9])
+        id_artikel,topic = rekomendasi(catch)
 
         # global user_list
         global user_list
 
         user_list = Papers.objects.filter(id_pub__in=id_artikel).order_by('id_pub').values('title', 'cite', 'authors', 'year', 'topic', 'author')
-
+        
         id_paper = []
-
         for i in user_list:
             id_paper.append(i['author'])
 
         author = Authors.objects.filter(nidn__in=id_paper)
 
-        # global hasiltopik
-        # hasiltopik = topic_dict.get(str(topic))
-
-        topic_obj = Topics.objects.filter(id_topic=topic+1).values('topic_name').first()
+        topic_obj = Topics.objects.get(id_topic=topic)
 
         print(topic_obj)
 
@@ -342,7 +190,7 @@ def search(request):
         paginator = Paginator(user_list, 10)
 
         global author_rekomen
-        author_rekomen = Authors.objects.filter(topik_dominan1=topic+1).order_by('-nilai_dominan1')[:3]
+        author_rekomen = Authors.objects.filter(topik_dominan1=topic).order_by('-nilai_dominan1')[:3]
 
         global users
 
@@ -680,3 +528,124 @@ def vis_author(nidn):
 def getData_sumcount_topik(top):
     data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')
     return(data)
+
+def rekomendasi(input):
+    data = [input]
+    id2word = Dictionary.load('pdupt_website/id2word_new.dict')
+    corpus = MmCorpus('pdupt_website/corpus_new.mm')
+    df = pd.read_csv('pdupt_website/reduksifix.csv')
+    with open("pdupt_website/lemma_new.txt", "rb") as fp:   #Pickling
+        data_lemmatized=pickle.load(fp)
+    stop_words = stopwords.words('indonesian')
+    stop_words2 = stopwords.words('english')
+    stop_words.extend(stop_words2)
+    stop_words.extend(['of','in','and','the','for','on','using','based','from','with','to','by','as','an','pengaruh'
+                    ,'effect','analisis','at','pre','pro','analysis','berbasis','tahun','between','kualitas','method',
+                    'metode','through','menggunakan','hasil'])
+    # Remove Numbers
+    data = [re.sub(" \d+",' ', sent) for sent in data]
+    data = [re.sub('[^a-zA-Z]',' ', sent) for sent in data]
+    # Remove new line characters
+    data = [re.sub('\s+', ' ', sent) for sent in data]
+
+    # Remove distracting single quotes
+    data = [re.sub("\'", "", sent) for sent in data]
+
+    def sent_to_words(sentences):
+        for sentence in sentences:
+            yield(gensim.utils.simple_preprocess(str(sentence), deacc=True))  # deacc=True removes punctuations
+
+    data = sent_to_words(data)
+    data_words = list(data)
+    # Build the bigram and trigram models
+    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100) # higher threshold fewer phrases.
+    trigram = gensim.models.Phrases(bigram[data_words], threshold=100)  
+
+    # Faster way to get a sentence clubbed as a trigram/bigram
+    bigram_mod = gensim.models.phrases.Phraser(bigram)
+    trigram_mod = gensim.models.phrases.Phraser(trigram)
+
+
+    # Define functions for stopwords, bigrams, trigrams and lemmatization
+    # from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+    def remove_stopwords(texts):
+        return [[word for word in simple_preprocess(str(doc)) if word not in (stop_words or stop_words2)] for doc in texts]
+
+    def make_bigrams(texts):
+        return [bigram_mod[doc] for doc in texts]
+
+    def make_trigrams(texts):
+        return [trigram_mod[bigram_mod[doc]] for doc in texts]
+
+    def lemmatization(texts):
+        """https://spacy.io/api/annotation"""
+        texts_out = []
+        for sent in texts:
+            doc = nlp(" ".join(sent)) 
+            texts_out.append([token.lemma_ for token in doc])
+        return texts_out
+
+    # Remove Stop Words
+    data_words_nostops = remove_stopwords(data_words)
+
+    # # Form Bigrams
+    data_words_bigrams = make_bigrams(data_words_nostops)
+
+    nlp = spacy.load('en_core_web_sm')
+
+    data_lemmatized_search = lemmatization(data_words_bigrams)
+
+    #stem masing-masing kata yang ada
+    factory = StemmerFactory()
+    stemmer = factory.create_stemmer()
+
+    for x in range(len(data_lemmatized_search)-1):
+        for y in range(len(data_lemmatized_search[x])-1):
+            data_lemmatized_search[x][y] = stemmer.stem(data_lemmatized_search[x][y])
+
+            # import gensim
+    model = gensim.models.ldamodel.LdaModel.load('pdupt_website/mallet_18_lda.mdl', mmap='r') 
+    new_doc_bow = id2word.doc2bow(data_lemmatized_search[0])
+    hasil = model.get_document_topics(new_doc_bow)
+
+    topic=0
+    nilai =-99
+    for i, row in (hasil):
+        if(row>nilai):
+            topic=i
+            nilai=row
+
+    df_topik=df.loc[df['Topic1'] == topic]
+    df_topik = df_topik.astype({"id_judul": int})
+    df_topik=df_topik.reset_index(drop=True)
+
+    ##membuat data lemma, corpus dan dictionary berdasarkan data dalam 1 topik
+    res_list = [data_lemmatized[int(i)-1] for i in df_topik.id_judul] 
+    # Create Dictionary
+    id2word_topik = corpora.Dictionary(res_list)
+
+    # Create Corpus
+    texts = res_list
+
+    # Term Document Frequency
+    corpus_topik = [id2word_topik.doc2bow(text) for text in res_list]
+
+    #membuat indexing untuk perhitungan cossim
+    index_tmpfile = get_tmpfile("index")
+    index = Similarity(index_tmpfile,corpus_topik, num_features=len(id2word_topik))
+
+    #query diambil dari term document berdasarkan corpus per topik dari data lemma hasil search
+    query = id2word_topik.doc2bow(data_lemmatized_search[0])
+    similarities = index[query]
+
+    sort_index=np.argsort(similarities)
+    sort_index
+
+    reversed_arr = sort_index[::-1]
+    reversed_arr
+
+    list_idx=reversed_arr[:10]
+
+    list_id_artikel=list(df_topik[df_topik.index.isin(list_idx)].id_judul)
+
+    return(list_id_artikel,topic+1)
