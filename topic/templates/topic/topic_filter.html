@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">Collaborator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/author">Author</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/topic" style="background-color: white; color: #013880;">Topic</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/affiliation">Affiliation</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="width: 100%; margin-top:100px; margin-bottom:30px;">
+    <form action="/topic/" class="form-inline justify-content-center" method="post">
+        {% csrf_token %}
+            <input type="text" class="form-control" placeholder="Search Topic..." id="topic" name="topic" style="border-color: #013880; width:94%">
+            <button type="Submit" class="btn btn-primary" style="background-color: #013880; font-family: 'Quicksand', sans-serif; margin-left:15px;">
+                <i class="fas fa-search"></i>
+            </button>
+    </form>
+</div>
+
+<div class="container">
+    {% if users.has_other_pages %}
+        <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:20px">
+            <ul class="pagination justify-content-end">
+                {% if users.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                    {% if users.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?sort={{chk}}&page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                    {% endif %}
+        
+                    
+                    {% for i in users.paginator.page_range %}
+                    {% if users.number == i %}
+                        <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li class="page-item"><a href="?sort={{chk}}&page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+        
+                    {% if users.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?sort={{chk}}&page={{ users.next_page_number }}" style="color:#013880;">Next</a>
+                    </li>
+                        {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+
+<div class="container" style="text-align:left; width:100%;">
+    <div class="filter" style="width:400px; float:left">
+        Filter By: <br> <br>
+        <form action="/topic/" method="GET">
+            <input type="checkbox" id="sortaz" name="sort" value="sortaz">
+            <label for="sortaz">Sort By A-Z</label><br>
+            <input type="checkbox" id="sortcitations" name="sort" value="sortcitations">
+            <label for="sortcitations">Sort By Citations</label><br>
+            <input type="checkbox" id="sortpublications" name="sort" value="sortpublications">
+            <label for="sortpublications">Sort By Publications</label><br>
+            <input type="checkbox" id="sortauthors" name="sort" value="sortauthors">
+            <label for="sortauthors">Sort By Total Authors</label><br>
+            <input type="submit" value="Update" id="selection-button">
+        </form>
+    </div>
+    {% for topic in users %}
+    <div class="item" style="font-size:20px; box-shadow: 1px 1px 8px gray; background-color:white; width: 680px; height:190px; float:right; text-align:left; padding-left:20px; padding-right: 20px; margin-bottom:50px;">
+        <a href="{{ topic.id_topic }}" style="color: #013880;">
+            <p style="margin-top: 20px; font-size:20px;"> <strong> {{ topic.topic_name }} </strong></p>
+        </a>
+        <p> <strong style="font-size:16px"> {{ topic.total_author }} </strong> <strong style="font-size: 13px;"> Authors </strong> <strong style="font-size:16px"> {{ topic.total_publication }} </strong> <strong style="font-size: 13px;"> Publications </strong></p>
+        <p> <strong style="font-size:16px"> {{ topic.total_cite }} </strong> <strong style="font-size: 13px;"> Citations </strong> </p>
+    </div>    
+    {% endfor %}
+</div>
+
+{% endblock %}

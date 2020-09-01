@@ -1,0 +1,482 @@
+{% extends "base.html" %}
+
+{% block header %}
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<style>
+.thumbnail img {
+    display: block;
+}
+
+.thumbnail {
+    position: relative;
+    display: inline-block;
+}
+
+.caption {
+    position: absolute;
+    top: 50%;
+    left: 16%;
+    transform: translate( -50%, -50% );
+    text-align: left;
+    font-family: 'Quicksand', sans-serif;
+    color: white;
+    font-weight: bold;
+}
+</style>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">Collaborator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/author">Author</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/topic">Topic</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/affiliation">Affiliation</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="thumbnail">
+  <img style="display:block; width:100%;" src="{% static "author/img/fotoits.jpg" %}" alt="Background ITS">
+  <div class="caption">
+    <p>Collaborator Finder</p>
+    <p>Established: July 12, 2020</p>
+  </div>
+</div>
+
+
+
+<div class="container" style="font-family: 'Quicksand', sans-serif; margin-top:50px; margin-bottom:20px">
+  <div class="text-center">
+      <h1 style="font-weight:bold;">Find Your Collaborator!</h1>
+  </div>
+</div>
+
+<div class="container" style="font-family: 'Quicksand', sans-serif; margin-bottom:40px; ">
+  <div class="text-center">
+      Enter title of your paper to easily find papers 
+      <br>
+      or authors that have similar field as yours.
+  </div>
+</div>
+
+<div class="container" style="width: 100%;">
+  <form action="/search/" method="post" class="text-center">
+      {% csrf_token %}
+      <div class="form-group">
+          <label for="title" style="font-family: 'Quicksand', sans-serif;">Title: </label>
+          <input type="text" class="form-control" placeholder="Enter Title" id="title" name="title" >
+      </div>
+      <button type="Submit" class="btn btn-primary" style="background-color: #013880; font-family: 'Quicksand', sans-serif; margin:30px;">Find Collaborator</button>
+  </form>
+</div>
+
+<div class="visualisasi" style="width:100%; ">
+    <div style="width:46%; text-align:center; float:left;">
+        <p style="font-family: 'Quicksand', sans-serif; margin-top: 30px;">Top 5 Topics by Affiliation by <strong style="color: #013880;" >Collaborator Finder</strong></p>
+    </div>  
+    <div style="width:53%; text-align:center; float:right;">
+        <p style="font-family: 'Quicksand', sans-serif; margin-top: 30px;">Top 3 Topics by <strong style="color: #013880;" >Collaborator Finder</strong></p>
+    </div>
+    <div class="visualisasi1" style="width: 45%; height: 500px; background-color:white; margin: 18px;text-align:center; border:1px solid gray; border-radius:20px; float:left;">
+      <svg id="dataviz" height="500" width="800">
+
+          <text x="279" y="64" fill="black">Kimia</text>
+          <text x="428" y="160" fill="black">Kimia Organik</text>
+          <text x="369" y="325" fill="black">HRD</text>
+          <text x="166" y="325" fill="black">Konservasi</text>
+          <text x="128" y="160" fill="black">Hukum</text>
+
+          <circle cx="300" cy="200" r="20" stroke="black" stroke-width="1" fill-opacity='0' />
+          <circle cx="300" cy="200" r="40" stroke="black" stroke-width="1" fill-opacity='0' />
+          <circle cx="300" cy="200" r="60" stroke="black" stroke-width="1" fill-opacity='0' />
+          <circle cx="300" cy="200" r="80" stroke="black" stroke-width="1" fill-opacity='0' />
+          <circle cx="300" cy="200" r="100" stroke="black" stroke-width="1" fill-opacity='0' />
+          <circle cx="300" cy="200" r="120" stroke="black" stroke-width="2" fill-opacity='0' />
+
+          <polygon points="300,126.96 395.77733333333333,164.49633333333333 323.288,228.968 265.71833333333336,252.19 252.128,179.81866666666667" style="fill:green; fill-opacity:0.5;stroke:green;stroke-width:3" />
+          <circle cx="300" cy="126.96" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="395.77733333333333" cy="164.49633333333333" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="323.288" cy="228.968" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="265.71833333333336" cy="252.19" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="252.128" cy="179.81866666666667" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+
+
+          <polygon points="300,177.92000000000002 369.484,174.243 318.1766666666667,222.61 251.40266666666668,273.98400000000004 275.724,189.766" style="fill:yellow; fill-opacity:0.5;stroke:yellow;stroke-width:3" />
+          <circle cx="300" cy="177.92000000000002" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="369.484" cy="174.243" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="318.1766666666667" cy="222.61" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="251.40266666666668" cy="273.98400000000004" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="275.724" cy="189.766" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+
+
+          <polygon points="300,127.92 312.9533333333333,195.19833333333332 345.37333333333333,256.44 284.16566666666665,224.106 282.796,192.74733333333333" style="fill:red; fill-opacity:0.5;stroke:red;stroke-width:3" />
+          <circle cx="300" cy="127.92" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="312.9533333333333" cy="195.19833333333332" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="345.37333333333333" cy="256.44" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="284.16566666666665" cy="224.106" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="282.796" cy="192.74733333333333" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+
+
+          <polygon points="300,167.36 352.04533333333336,180.70733333333334 321.894,227.234 282.781,226.214 241.418,175.30366666666666" style="fill:blue; fill-opacity:0.5;stroke:blue;stroke-width:3" />
+          <circle cx="300" cy="167.36" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="352.04533333333336" cy="180.70733333333334" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="321.894" cy="227.234" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="282.781" cy="226.214" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="241.418" cy="175.30366666666666" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+
+
+          <polygon points="300,136.08 311.136,195.872 320.828,225.90800000000002 279.029,231.926 290.276,195.90066666666667" style="fill:lime; fill-opacity:0.5;stroke:lime;stroke-width:3" />
+          <circle cx="300" cy="136.08" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="311.136" cy="195.872" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="320.828" cy="225.90800000000002" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="279.029" cy="231.926" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+          <circle cx="290.276" cy="195.90066666666667" r="2" stroke="black" stroke-width="1" fill-opacity='1' />
+                  
+      </svg>
+  </div>
+  <div class="visualisasi2" style="width: 15%; height: 500px; background-color:white; margin: 18px; border:1px solid gray; border-radius:20px; float:left;">
+      <p style="text-align: center; margin-bottom:0px; margin-top:30px;"> <strong> Top Trending Topic </strong></p>
+          <div class="logo_topik1" style="width: 65px;float:left; margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:'topik'|add:topik_1.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+          <div class="topik">
+              <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ topik_1.topic_name }} </strong></p>
+              <p style="font-size: 12px;"> <strong>{{ topik_1.total_publication }} Publications </strong> </p>
+          </div>
+          <br>
+          <br>
+
+          <p style="text-align: center; margin-bottom:0px;">Top {{ topik_1.topic_name }} Affiliation</p>
+          {% for affi_1 in affi_1 %}
+          <div class="logo_afiliasi1" style="width: 60px;float:left;margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:affi_1.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+          
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px; margin-top: 12px;"> <strong> {{ affi_1.initial_univ }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px;"> <strong>{{ affi_1.total_author }} Authors </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ affi_1.total_publication }} Publications </strong> </p>
+          {% endfor %}
+
+          <br>
+          <br>
+          <p style="text-align: center; margin-bottom:0px; ">Top {{ topik_1.topic_name }} Author</p>
+          {% for author_1 in author_1 %}
+          <div class="logo_author1" style="float:left; width:65px; margin:15px;">
+              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:60px; height:60px; border-radius: 50%;">
+          </div>
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ author_1.name }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px"> <strong>{{ author_1.nilai_dominan1 }} Publications </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ author_1.citations }} Citations </strong> </p>
+          {% endfor %}
+              
+
+  </div>
+  <div class="visualisasi3" style="width: 15%; height: 500px; background-color:white; margin: 18px; border:1px solid gray; border-radius:20px; float:left;">
+      <p style="text-align: center; margin-bottom:0px; margin-top:30px;"> <strong> Top Trending Topic </strong></p>
+          <div class="logo_topik2" style="width: 65px;float:left; margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:'topik'|add:topik_2.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+          <div class="topik">
+              <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ topik_2.topic_name }} </strong></p>
+              <p style="font-size: 12px;"> <strong>{{ topik_2.total_publication }} Publications </strong> </p>
+          </div>
+          <br>
+          <br>
+
+          <p style="text-align: center; margin-bottom:0px;">Top {{ topik_2.topic_name }} Affiliation</p>
+          {% for affi_2 in affi_2 %}
+          <div class="logo_afiliasi2" style="width: 60px;float:left;margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:affi_2.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px; margin-top: 12px;"> <strong> {{ affi_2.initial_univ }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px;"> <strong>{{ affi_2.total_author }} Authors </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ affi_2.total_publication }} Publications </strong> </p>
+          {% endfor %}
+
+          <br>
+          <br>
+          <p style="text-align: center; margin-bottom:0px; ">Top {{ topik_2.topic_name }} Author</p>
+          {% for author_2 in author_2 %}
+          <div class="logo_author2    " style="float:left; width:65px; margin:15px;">
+              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:60px; height:60px; border-radius: 50%;">
+          </div>
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ author_2.name }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px"> <strong>{{ author_2.nilai_dominan1 }} Publications </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ author_2.citations }} Citations </strong> </p>
+          {% endfor %}
+  </div>
+  <div class="visualisasi4" style="width: 15%; height: 500px; background-color:white; margin: 18px; border:1px solid gray; border-radius:20px; float:left;">
+      <p style="text-align: center; margin-bottom:0px; margin-top:30px;"> <strong> Top Trending Topic </strong></p>
+          <div class="logo_topik3" style="width: 65px;float:left; margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:'topik'|add:topik_3.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+          <div class="topik3">
+              <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ topik_3.topic_name }} </strong></p>
+              <p style="font-size: 12px;"> <strong>{{ topik_3.total_publication }} Publications </strong> </p>
+          </div>
+          <br>
+          <br>
+
+          <p style="text-align: center; margin-bottom:0px;">Top {{ topik_3.topic_name }} Affiliation</p>
+          {% for affi_3 in affi_3 %}
+          <div class="logo_afiliasi3" style="width: 60px;float:left;margin:15px;">
+              <img style="width:60px; height:60px;" src="{% static 'author/img/'|add:affi_3.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+          </div>
+
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px; margin-top: 12px;"> <strong> {{ affi_3.initial_univ }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px;"> <strong>{{ affi_3.total_author }} Authors </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ affi_3.total_publication }} Publications </strong> </p>
+          {% endfor %}
+
+          <br>
+          <br>
+          <p style="text-align: center; margin-bottom:0px; ">Top {{ topik_3.topic_name }} Author</p>
+          {% for author_3 in author_3 %}
+          <div class="logo_author3" style="float:left; width:65px; margin:15px;">
+              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:60px; height:60px; border-radius: 50%;">
+          </div>
+          <p style="font-size: 15px; color: #013880; margin:15px;  margin-bottom:0px;"> <strong> {{ author_3.name }} </strong></p>
+          <p style="font-size: 12px; margin:15px;  margin-bottom:0px; margin-top:0px"> <strong>{{ author_3.nilai_dominan1 }} Publications </strong> </p>
+          <p style="font-size: 12px;"> <strong>{{ author_3.citations }} Citations </strong> </p>
+          {% endfor %}
+  </div>
+</div>
+
+<div class="visualisasiSVG" class="text-center" style="width:97%; height:600px; margin: 20px; background-color:white; border:1px solid gray; border-radius:20px;  margin-top:650px;">
+  <p style="font-family: 'Quicksand', sans-serif; margin-top: 15px; text-align:center;">Trending Topics by <strong style="color: #013880;" >Collaborator Finder</strong></p>
+  <div class="filter" style="width:15%; float:left; margin-left:50px; border-right:1px black solid">
+      <form action="" method="POST">
+          {% csrf_token %}
+          <p>Filter By Topic: </p>
+      {% for topics in topik_filter %}
+      <input type="checkbox" id="{{ topics.id_topic }}" name="id_topik" value="{{ topics.id_topic }}">
+      <label for="{{ topics.id_topic }}" style="font-size:12px; margin:0px;"> {{ topics.topic_name }}</label><br>
+      {% endfor %}
+      <input type="submit" value="Update" id="selection-button">    
+      </form>
+  </div>
+  <div class="svg" style="width:55%; height:500px; float:left; border-right:1px black solid;" >
+      <svg overflow='scroll' id='vis' width='1600' height='700' transform='scale(0.5) translate(-800 -300)' z-index='1'>
+          <g>
+              <g class="axis" transform="translate(0,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2010
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(150,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2011
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(300,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2012
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(450,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2013
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(600,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2014
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(750,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2015
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(900,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2016
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(1050,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2017
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(1200,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2018
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(1350,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2019
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+
+                  </line>
+              </g>
+              <g class="axis" transform="translate(1500,0)">
+                  <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                      2020
+                  </text>
+                  <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+
+                  </line>
+              </g>
+          </g>
+          <g>
+              {% for dat in data %}
+              <path
+                  d="M {{dat.xAwalAtas}},{{dat.yAwalAtas}} C {{dat.xLengkung1}},{{dat.yLengkung1atas}} {{dat.xLengkung2}},{{dat.yLengkung2atas}} {{dat.xAkhirAtas}},{{dat.yAkhirAtas}} L {{dat.xAkhirBawah}},{{dat.yAkhirBawah}} C {{dat.xLengkung2}},{{dat.yLengkung2bawah}} {{dat.xLengkung1}},{{dat.yLengkung1bawah}} {{dat.xAwalBawah}},{{dat.yAwalBawah}}"
+                  style="stroke-dasharray: 10, 10; stroke: gray; stroke-width: 0; fill-opacity: 0.6; cursor: pointer; fill: {{dat.Color}};"
+                  opacity="1"> </path>
+              {% endfor %}
+          </g>
+      </svg>
+      <ul style="top:-280px; left:350px; position:relative;">
+        <li type="square" style="color:#ed164f">Kimia</li>
+        <li type="square" style="color:#d15ac9">Kimia Organik</li>
+        <li type="square" style="color:#bea56b">HRD</li>
+    </ul>
+  </div>
+  <div class="top-3-topik" style="width:26%; float:right; text-align:center;">
+        <p style="text-align:center;">Jumlah Publikasi dalam 3 Tahun Terakhir</p>
+        <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%; margin-bottom:30px; padding-top:15px; padding-bottom:15px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_1.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                        <th>Best Affiliation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik1_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative; " alt="Logo Afiliasi">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%;margin-bottom:30px; padding-top:15px; padding-bottom:15px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_2.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                        <th>Best Affiliation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik2_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative; " alt="Logo Afiliasi">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%; padding-top:15px; padding-bottom:15px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_3.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                        <th>Best Affiliation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik3_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+        var svg = d3.select("#dataviz")
+            svg.append("circle").attr("cx",554).attr("cy",128).attr("r", 6).style("fill", "green")
+            svg.append("circle").attr("cx",554).attr("cy",150).attr("r", 6).style("fill", "yellow")
+            svg.append("circle").attr("cx",554).attr("cy",172).attr("r", 6).style("fill", "red")
+            svg.append("circle").attr("cx",554).attr("cy",194).attr("r", 6).style("fill", "blue")
+            svg.append("circle").attr("cx",554).attr("cy",216).attr("r", 6).style("fill", "lime")
+
+            svg.append("text").attr("x", 568).attr("y", 128).text("UGM").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 568).attr("y", 150).text("IPB").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 568).attr("y", 172).text("UI").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 568).attr("y", 194).text("UnDip").style("font-size", "15px").attr("alignment-baseline","middle")
+            svg.append("text").attr("x", 568).attr("y", 216).text("ITB").style("font-size", "15px").attr("alignment-baseline","middle")
+
+    </script>
+
+
+{% endblock %}

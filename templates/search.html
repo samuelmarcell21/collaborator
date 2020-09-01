@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">Collaborator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/author">Author</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/topic">Topic</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/affiliation">Affiliation</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+
+<main id="main-container" style="min-height: 829px;">
+
+    <div class="content" style="font-size: 20px; color:#013880; margin-top:80px;">
+        <p style="margin-left:18px;"><strong>"{{ catch }}" classified into {% for topic in topik %} {{ topic.topic_name }}'s Topic</strong></p> {% endfor %} 
+
+        <p style="margin-left:18px;"><strong>Papers and Authors Recommendation by ITS Collaborator</strong> </p>
+    </div>  
+
+    <div class="content">
+        {% if users.has_other_pages %}
+            <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:20px">
+                <ul class="pagination justify-content-end">
+                    {% if users.has_other_pages %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                        {% if users.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        {% endif %}
+            
+                        
+                        {% for i in users.paginator.page_range %}
+                        {% if users.number == i %}
+                            <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+            
+                        {% if users.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
+                        </li>
+                            {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+        
+    <div class="container" style="width:100%;">
+        {% for authors in users %}
+        <div class="author" style="font-size:10px; box-shadow: 1px 1px 8px gray; background-color:white; width: 445px; height:145px; text-align:left; padding-left:20px; padding-top:15px; padding-right:20px; margin-bottom:30px; float:left;">
+            {{ authors.authors }}
+        </div>
+            <div class="paper" style="font-size:10px; box-shadow: 1px 1px 8px gray; background-color:white; width: 633px; height:145px; text-align:left; padding-left:20px; padding-right:20px; margin-bottom:30px; float:right;">
+                <p style="font-size: 16px; color:#013880; margin-top:10px;margin-bottom:5px;"><strong>{{ authors.title }}</strong></p>
+                <p style="margin-top:5px; margin-bottom:5px;">{{ authors.year }}, {{ authors.authors }} </p>
+                <p style="color:#013880; margin-top:5px; margin-bottom:5px;"> {{ topik.topic_name }} </p>
+            </div>    
+            {% endfor %}
+        </div>
+        
+    </main>
+{% endblock content %}
+
+{% block footer %}
+<footer id="page-footer" class="bg-white opacity-0" style="opacity: 1; margin-top: 20px;">
+    <div class="content py-20 font-size-xs clearfix">
+        <div class="float-left" style="padding-top: 40px">
+            <div class="info">© 2020 Institut Teknologi Sepuluh Nopember</div>
+        </div>
+        <div class="float-right">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/Logo-its.png 2x, https://my.its.ac.id/assets/media/img/Logo-its.png 1x" src="https://my.its.ac.id/assets/media/img/Logo-its.png" alt="Logo ITS" class="dark-logo mr-2" width="100px">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/logo-ITSsemangatbaru.png 2x, https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png 1x" src="https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png" width="100px" alt="Logo ITS Semangat Baru" class="dark-logo">
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://my.its.ac.id/assets/plugins/chartjs/Chart.min.js"></script>
+    <script src="https://my.its.ac.id/assets/js/core/jquery.min.js"></script>
+    <script src="https://my.its.ac.id/assets/js/codebase.core.min.js"></script>
+    <script src="https://my.its.ac.id/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="https://my.its.ac.id/assets/js/codebase.app.min.js"></script>
+    <script src="https://my.its.ac.id/assets/js/pages/db_corporate.min.js"></script>
+    <script src="https://my.its.ac.id/assets/js/webauthn/base64url-arraybuffer.js"></script>
+    <script src="https://my.its.ac.id/assets/js/webauthn/cbor.js"></script>
+    <script src="https://my.its.ac.id/assets/js/webauthn/helpers.js"></script>
+    <script src="https://my.its.ac.id/assets/plugins/cropperjs/dist/cropper.js"></script>
+    <script src="https://my.its.ac.id/assets/plugins/jquery-croppers/dist/jquery-cropper.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+{% endblock %}

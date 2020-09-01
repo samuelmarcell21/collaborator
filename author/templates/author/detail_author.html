@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">Collaborator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/author" style="background-color: white; color: #013880;">Author</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/topic">Topic</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/affiliation">Affiliation</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="info-affiliation" style="margin-top:40px; margin-left:65px; width:100%;">
+    <div class="logo" style="width: 140px; float:left; height: 125px;">
+        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:111px; height:111px; border-radius: 50%;">
+    </div>
+    <div class="info-detail-affiliation" style=" margin-left:20px;">
+        <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
+        <p style="font-size:15px;"> <strong style="font-size: 20px;"> {{ countpub }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ sumcite }} </strong> Citations </p>
+        <a href="/topic/{{ author.topik_dominan1 }}">
+            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
+        </a>
+        <a href="/topic/{{ author.topik_dominan2 }}">
+            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan2.topic_name }} </p>
+        </a>
+        <a href="/topic/{{ author.topik_dominan3 }}">
+            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan3.topic_name }} </p>
+        </a>
+    </div>
+</div>
+
+<div class="publication-vis" style="margin-left:65px; margin-top:30px; color: #013880; width:60%; float:left; margin-bottom:30px;">
+    <p> <strong>Publications & Topics Over Time</strong> </p>
+        <div class="chart-container content" style="height:100%; width:100%;">
+            <canvas id="mixed-chart"style="background-color: #FFFFFF;  border-radius:30px; padding:30px;"></canvas>
+        </div>
+</div>
+
+<div class="info-per-topik" style="text-align:center;width:28%; float:right; margin-top:30px; color: #013880; margin-right:65px;">
+    <p style="text-align:left;"> <strong>Last 3 Years</strong> </p>
+    <div style="background-color:white; border-radius:30px; padding:20px;">
+        <div class="topik-1" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan1.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik1_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="topik-2" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan2.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik2_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="topik-3" style="border-radius: 15px; border:1px black solid; width: 100%;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan3.topic_name }}</p>
+            <table style="margin-left:20px; margin-right:20px; width:100%;">
+                <thead style="font-size:10px;">
+                    <tr>
+                        <th>Year</th>
+                        <th>Publication</th>
+                        <th>Citation</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size:10px; text-align:center">
+                    {% for data in topik3_data %}
+                        <tr>
+                            <td>{{ data.year }}</td>
+                            <td>{{ data.pubcount }}</td>
+                            <td>{{ data.sumcite }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p style="text-align:left; margin-top:50px;"> <strong>Top Authors by Similarities</strong> </p>
+    {% for author in rekomen_author %}
+        <div style="background-color:white; border-radius:30px; padding:20px; margin-bottom:20px;">
+            <div class="logo" style="width: 90px; height: 100px;float:left; margin-right:20px;">
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:85px; height:85px; border-radius: 50%;">
+            </div>
+            <div class="info-detail-affiliation" style=" margin-left:20px; text-align:left;">
+                <p style="font-size:16px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
+                <p style="font-size:13px;"> <strong style="font-size: 20px;"> {{ author.nilai_dominan1 }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ author.citations }} </strong> Citations </p>
+                <a href="/topic/{{ author.topik_dominan1 }}">
+                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
+                </a>
+                <a href="/topic/{{ author.topik_dominan2 }}">
+                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan2.topic_name }} </p>
+                </a>
+                <a href="/topic/{{ author.topik_dominan3 }}">
+                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan3.topic_name }} </p>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="publication-affi" style="margin-left:65px; margin-top:30px; width:60%;">
+    <p style="color: #013880;"> <strong>Publications</strong> </p>
+    {% if users.has_other_pages %}
+                    <nav aria-label="Page navigation example" style="margin-bottom: 40px;">
+                        <ul class="pagination justify-content-end">
+                            {% if users.has_other_pages %}
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end">
+                                {% if users.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                {% endif %}
+                    
+                                
+                                {% for i in users.paginator.page_range %}
+                                {% if users.number == i %}
+                                    <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+                    
+                                {% if users.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
+                                </li>
+                                    {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+    <div class="filter" style="float:left;">
+        Filter By: <br> 
+        <form action="/affiliation/{{univs.id_univ}}" method="GET">
+        {% for topik in nama_topik %}
+        <input type="checkbox" id="{{topik.topic_name}}" name="id_topik" value="{{topik.id_topic}}">
+        <label for="{{topik.topic_name}}" style="font-size:12px; margin:0px;">{{topik.topic_name}}</label><br>
+        {% endfor %}
+        <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">
+        </form>
+    </div>
+    {% for paper in users %}
+    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:auto; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px;">
+        <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
+        <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
+        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px;"> {{ paper.topic.topic_name }} </p>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+<script>
+    {% comment %} new Chart(document.getElementById("doughnut-chart"), {
+        type: 'pie',
+        data: {
+        labels: ["{{author.topik_dominan1.topic_name}}", "{{author.topik_dominan2.topic_name}}", "{{author.topik_dominan3.topic_name}}",],
+        datasets: [{
+            label: "Jumlah Publikasi Berdasarkan Topik",
+            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f",],
+            data: [{{author.nilai_dominan1}},{{author.nilai_dominan2}},{{author.nilai_dominan3}}]
+        }]
+        },
+        options: {
+        title: {
+            display: true,
+            text: 'Jumlah Publikasi Berdasarkan topik'
+        }
+        }
+    });
+    new Chart(document.getElementById("polar-chart"), {
+        type: 'polarArea',
+        data: {
+        labels: ["{{author.topik_dominan1.topic_name}}", "{{author.topik_dominan2.topic_name}}", "{{author.topik_dominan3.topic_name}}",],
+        datasets: [{
+            label: "Publikasi Topik Terbanyak 3 tahun terakhir",
+            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f",],
+            data: [{{author.nilai_dominan1}},{{author.nilai_dominan2}},{{author.nilai_dominan3}}]
+        }]
+        },
+        options: {
+        title: {
+            display: true,
+            text: 'Publikasi Topik Terbanyak 3 tahun terakhir'
+        }
+        }
+    }); {% endcomment %}
+    new Chart(document.getElementById("mixed-chart"), {
+    type: 'bar',
+    data: {
+        labels: ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'],
+        datasets: [
+        {%for dat in data_sum %} {
+                    label: "{{dat.x}}",
+                    type: "line",
+                    borderColor: "{{dat.Color}}",
+                    data: {{dat.y}},
+                    fill: false
+                },
+        {% endfor %} 
+        
+        {%for dat in data_count %}
+                {
+                    label: "{{dat.x}}",
+                    type: "bar",
+                    backgroundColor: "{{dat.Color}}",
+                    backgroundColorHover: "{{dat.Color}}",
+                    data: {{dat.y}},
+                },
+        {% endfor %}           
+        
+        ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Persebaran jumlah topik 3 tahun terakhir'
+        },
+        legend: {
+            labels: {
+                filter: function(legendItem, chartData) {
+                // return true or false based on legendItem's datasetIndex (legendItem.datasetIndex)
+                if ([0,1,2].includes(legendItem.datasetIndex)) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        },
+            chartArea: {
+                backgroundColor: 'rgba(255, 255, 255, 0.9)'
+            }
+    }
+    });
+</script>
+
+{% endblock %}
