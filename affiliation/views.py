@@ -125,7 +125,7 @@ def show_detailaffiliation(request, *args, **kwargs):
 
         # topik_affiliation = Topics.objects.filter(id_topic__in=topik).order_by('-total_publication')[:6]
 
-        print(topik)
+        # print(topik)
 
         # models.Shop.objects.order_by().values('city').distinct()
         page = request.GET.get('page', 1)
@@ -167,7 +167,7 @@ def show_detailaffiliation(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
         topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
-        
+
         ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
         data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
         data_sumcount=data_sumcount.to_dict('records')
