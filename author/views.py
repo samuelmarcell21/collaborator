@@ -93,7 +93,7 @@ def show_detailauthor(request, *args, **kwargs):
     sumcite = paper.aggregate(Sum('cite'))
     df_countsum,list_count,list_sum=vis_author(nidn_author)
 
-    ##data sum count, ada 2 pilihan mau nampilin selama 10 tahun terakhir, atau tahun2 yang punya nilai aja
+    ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
     topik_sumcount=[author.topik_dominan1_id,author.topik_dominan2_id,author.topik_dominan3_id]  
     data_sumcount=sortData_sumcount_author(df_countsum,nidn_author)
     data_sumcount=data_sumcount.to_dict('records')

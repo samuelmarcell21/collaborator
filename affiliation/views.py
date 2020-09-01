@@ -138,7 +138,7 @@ def show_detailaffiliation(request, *args, **kwargs):
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
-        ##data sum count, ada 2 pilihan mau nampilin selama 10 tahun terakhir, atau tahun2 yang punya nilai aja
+        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
         topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
         data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
         data_sumcount=data_sumcount.to_dict('records')
@@ -167,6 +167,8 @@ def show_detailaffiliation(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
         topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
+        
+        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
         data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
         data_sumcount=data_sumcount.to_dict('records')
 
