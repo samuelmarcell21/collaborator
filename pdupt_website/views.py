@@ -104,68 +104,17 @@ def index(request):
         univ = []
         for i in affiliation:
             univ.append(i.initial_univ)
-
-        df=pd.DataFrame()
         topik=[1,16,11]
-        listdict=[]
-        for top in topik:
-            obj = Topics.objects.get(id_topic=top)
-            data=obj.svg.all().order_by('Year').values()
-            temp=pd.DataFrame(data)
-            temp2={'name':obj.topic_name}
-            listdict.append(temp2)
-            # namatopik.append()
-            df=pd.concat([df,temp])
-        datatopics=Topics.objects.all().values()
-        tes=Topics.objects.filter(id_topic=top).values().first()
-        data = scale_data(df)#scaling data
-        data = data.rename(columns={"topic_id": "Topik"})
-        # print(data.info())
-        data = data.astype({"Topik": float, "Year": float, "kumAtas": float, "kumBawah": float, "batasAtas": float, "batasBawah": float})
-        # print(data)
-        years=data.Year.unique()
-        HASIL = pd.DataFrame(columns=col)
-        # print( data[data['Topik']==1])
-        for year in years:
-            listGraf=[]
-            for top in topik:
-                a = data[(data['Topik']==top) & (data['Year']==year)]
-                # print(a)
-                graf=grafik(a['Topik'].values[0],a['Year'].values[0],a['Scale Atas'].values[0],a['Scale Bawah'].values[0],a['kumAtas'].values[0],a['kumBawah'].values[0],HASIL)
-                listGraf.append(graf)
-            sorted_listGraf = sorted(listGraf, key=operator.attrgetter('kumAtas'), reverse=True)
-            sorted_listGraf=Gambar(sorted_listGraf)
-            HASIL=BuatHasil(sorted_listGraf,HASIL)
-            HASIL=BuatHasil(listGraf,HASIL)
-        HASIL['Color']=HASIL.apply(color,axis=1)
-        HASIL=HASIL.reset_index(drop=True)
-        warna = HASIL.drop_duplicates(subset=['Topik', 'Color'])
-        warna = warna[['Topik', 'Color']]
-        # print(warna)
-        data_warna = warna.to_dict()
-        print(data_warna)
-        # print(HASIL.info())
-        # print(HASIL)
-        data_akhir=HASIL.to_dict('records')
 
-        # print(data_akhir)
-
-        topik1_data = Data_sumcount_topic.objects.filter(topic=topik[0]).order_by('-year')[:3]
-        topik2_data = Data_sumcount_topic.objects.filter(topic=topik[1]).order_by('-year')[:3]
-        topik3_data = Data_sumcount_topic.objects.filter(topic=topik[2]).order_by('-year')[:3]
-
-        ## code sumcount
-        data_sumcount=[]
-        for top in topik:
-            temp=getData_sumcount_topik(topik[0])
-            data_sumcount+=(list(temp.values('topic','year','pubcount','sumcite')))
-            
-        # print(data_sumcount)
+        data_akhir,listdict,listvis2,datatopics,data_warna=SVG(topik)
+        topik1_data = getData_sumcount_topik(topik[0])[:3]
+        topik2_data = getData_sumcount_topik(topik[1])[:3]
+        topik3_data = getData_sumcount_topik(topik[2])[:3]
 
         topik_filter = Topics.objects.all().order_by('topic_name')
 
         return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter,'data_sumcount':data_sumcount, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
+        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
 
     else:
         chk = request.POST.getlist('id_topik')
@@ -204,61 +153,16 @@ def index(request):
         for i in chk:
             topik.append(int(i))
 
-        listdict=[]
-        for top in topik:
-            obj = Topics.objects.get(id_topic=top)
-            data=obj.svg.all().order_by('Year').values()
-            temp=pd.DataFrame(data)
-            temp2={'name':obj.topic_name}
-            listdict.append(temp2)
-            # namatopik.append()
-            df=pd.concat([df,temp])
-        datatopics=Topics.objects.all().values()
-        tes=Topics.objects.filter(id_topic=top).values().first()
-        data = scale_data(df)#scaling data
-        data = data.rename(columns={"topic_id": "Topik"})
-        # print(data.info())
-        data = data.astype({"Topik": float, "Year": float, "kumAtas": float, "kumBawah": float, "batasAtas": float, "batasBawah": float})
-        # print(data)
-        years=data.Year.unique()
-        HASIL = pd.DataFrame(columns=col)
-        # print( data[data['Topik']==1])
-        for year in years:
-            listGraf=[]
-            for top in topik:
-                a = data[(data['Topik']==top) & (data['Year']==year)]
-                # print(a)
-                graf=grafik(a['Topik'].values[0],a['Year'].values[0],a['Scale Atas'].values[0],a['Scale Bawah'].values[0],a['kumAtas'].values[0],a['kumBawah'].values[0],HASIL)
-                listGraf.append(graf)
-            sorted_listGraf = sorted(listGraf, key=operator.attrgetter('kumAtas'), reverse=True)
-            sorted_listGraf=Gambar(sorted_listGraf)
-            HASIL=BuatHasil(sorted_listGraf,HASIL)
-            HASIL=BuatHasil(listGraf,HASIL)
-        HASIL['Color']=HASIL.apply(color,axis=1)
-        HASIL=HASIL.reset_index(drop=True)
-        # print(HASIL.info())
-        # print(HASIL)
-        data_akhir=HASIL.to_dict('records')
-
-        #Visualisasi samping svg
-        dfvis2=df[['topic_id','Year','batasAtas']]
-        dfvis2 = dfvis2.rename(columns={"topic_id": "Topik"})
-        dfvis2 = dfvis2.astype({"Topik": float, "Year": float, "batasAtas": float})
-        dfvis2= dfvis2[dfvis2['Year']>2017]
-        dfvis2['Color']=dfvis2.apply(color,axis=1)
-        listvis2=[]
-        flag=0
-        for top in dfvis2.Topik.unique():
-            datay=[]
-            for index,row in dfvis2[dfvis2['Topik']==top].iterrows():
-                datay.append(row['batasAtas'])
-            data={'x':listdict[flag]['name'],'y':datay,'Color':row['Color']}
-            flag+=1
-            listvis2.append(data)
+        
+        data_akhir,listdict,listvis2,datatopics,data_warna=SVG(topik)
+        topik1_data = getData_sumcount_topik(topik[0])[:3]
+        topik2_data = getData_sumcount_topik(topik[1])[:3]
+        topik3_data = getData_sumcount_topik(topik[2])[:3]
 
         topik_filter = Topics.objects.all().order_by('topic_name')
 
-        return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3, 'data':data_akhir,'nama_top':listdict,'data2':listvis2,'datatopics':datatopics, 'topik_filter':topik_filter})
+        return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
+        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
 
 def search(request):
     if request.method == 'POST':
@@ -612,9 +516,9 @@ def BuatHasil(sorted_listGraf,HASIL):
     return HASIL
 
 
-def SVG(request):
+def SVG(listtopik):
     df=pd.DataFrame()
-    topik=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+    topik=listtopik
     listdict=[]
     for top in topik:
         obj = Topics.objects.get(id_topic=top)
@@ -666,8 +570,13 @@ def SVG(request):
         data={'x':listdict[flag]['name'],'y':datay,'Color':row['Color']}
         flag+=1
         listvis2.append(data)
-    print(datatopics)
-    return render(request, 'author/SVG.html',{'data':data_akhir,'nama_top':listdict,'data2':listvis2,'datatopics':datatopics})
+    # print(datatopics)
+    warna = HASIL.drop_duplicates(subset=['Topik', 'Color'])
+    warna = warna[['Topik', 'Color']]
+    # print(warna)
+    data_warna = warna.to_dict()
+    return data_akhir,listdict,listvis2,datatopics,data_warna
+    # return render(request, 'author/SVG.html',{'data':data_akhir,'nama_top':listdict,'data2':listvis2,'datatopics':datatopics})
 
 
 def color(row):
