@@ -24,11 +24,11 @@
 
 {% block content %}
 
-<div class="info-affiliation" style="margin-top:40px; margin-left:65px; width:100%;">
+<div class="info-author" style="margin-top:40px; margin-left:65px; width:100%;">
     <div class="logo" style="width: 140px; float:left; height: 125px;">
         <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:111px; height:111px; border-radius: 50%;">
     </div>
-    <div class="info-detail-affiliation" style=" margin-left:20px;">
+    <div class="info-detail-author" style=" margin-left:20px;">
         <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
         <p style="font-size:15px;"> <strong style="font-size: 20px;"> {{ countpub }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ sumcite }} </strong> Citations </p>
         <a href="/topic/{{ author.topik_dominan1 }}">
@@ -53,7 +53,7 @@
 <div class="info-per-topik" style="text-align:center;width:28%; float:right; margin-top:30px; color: #013880; margin-right:65px;">
     <p style="text-align:left;"> <strong>Last 3 Years</strong> </p>
     <div style="background-color:white; border-radius:30px; padding:20px;">
-        <div class="topik-1" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
+        <div class="topik-author" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
             <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan1.topic_name }}</p>
             <table style="margin-left:20px; margin-right:20px; width:100%;">
                 <thead style="font-size:10px;">
