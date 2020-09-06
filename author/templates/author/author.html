@@ -77,7 +77,7 @@
   {% endif %}
 </div>
   
-<div style="width:18%; margin-left:70px; float:left;">
+<div class="filter" style="width:18%; margin-left:70px; float:left;">
     Filter By: <br> <br>
     <form action="/author/" method="GET">
     {% for topics in topic %}
@@ -122,5 +122,6 @@
           </div>
         </div>    
 {% endfor %}
+</div>
 
 {% endblock %}
