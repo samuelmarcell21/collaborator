@@ -174,13 +174,7 @@ def search(request):
         # global user_list
         global user_list
 
-        user_list = Papers.objects.filter(id_pub__in=id_artikel).order_by('id_pub').values('title', 'cite', 'authors', 'year', 'topic', 'author')
-        
-        id_paper = []
-        for i in user_list:
-            id_paper.append(i['author'])
-
-        author = Authors.objects.filter(nidn__in=id_paper)
+        user_list = Papers.objects.filter(id_pub__in=id_artikel).order_by('id_pub')[:10]
 
         topic_obj = Topics.objects.get(id_topic=topic)
 
@@ -190,7 +184,7 @@ def search(request):
         paginator = Paginator(user_list, 10)
 
         global author_rekomen
-        author_rekomen = Authors.objects.filter(topik_dominan1=topic).order_by('-nilai_dominan1')[:3]
+        author_rekomen = Authors.objects.filter(topik_dominan1=topic).order_by('-nilai_dominan1')[:4]
 
         global users
 
@@ -207,6 +201,7 @@ def search(request):
             'catch': catch,
             'users' : users,
             'author': author_rekomen,
+            'user_list': user_list,
         }
 
         return render(request, 'search.html', context)
