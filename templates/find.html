@@ -382,7 +382,7 @@
   <div class="top-3-topik" style="width:26%; float:right; text-align:center;">
         <p style="text-align:center;">Jumlah Publikasi dalam 3 Tahun Terakhir</p>
         <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%; margin-bottom:30px; padding-top:15px; padding-bottom:15px;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_1.topic_name }}</p>
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik1.topic_name }}</p>
             <table style="margin-left:20px; margin-right:20px; width:100%;">
                 <thead style="font-size:10px;">
                     <tr>
@@ -399,15 +399,16 @@
                             <td>{{ data.pubcount }}</td>
                             <td>{{ data.sumcite }}</td>
                             <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative; " alt="Logo Afiliasi">
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/'|add:data.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%;margin-bottom:30px; padding-top:15px; padding-bottom:15px;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_2.topic_name }}</p>
+        {% if topik2_data != null %}
+        <div class="topik-2" style="border-radius: 20px; border:1px black solid; width: 95%;margin-bottom:30px; padding-top:15px; padding-bottom:15px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik2.topic_name }}</p>
             <table style="margin-left:20px; margin-right:20px; width:100%;">
                 <thead style="font-size:10px;">
                     <tr>
@@ -424,15 +425,17 @@
                             <td>{{ data.pubcount }}</td>
                             <td>{{ data.sumcite }}</td>
                             <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative; " alt="Logo Afiliasi">
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/'|add:data.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%; padding-top:15px; padding-bottom:15px;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik_3.topic_name }}</p>
+        {% endif %}
+        {% if topik3_data != null %}
+        <div class="topik-3" style="border-radius: 20px; border:1px black solid; width: 95%; padding-top:15px; padding-bottom:15px;">
+            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ topik3.topic_name }}</p>
             <table style="margin-left:20px; margin-right:20px; width:100%;">
                 <thead style="font-size:10px;">
                     <tr>
@@ -449,15 +452,15 @@
                             <td>{{ data.pubcount }}</td>
                             <td>{{ data.sumcite }}</td>
                             <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
+                                <img style="width:15px; height:15px;" src="{% static 'author/img/'|add:data.id_univ|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-  </div>
-</div>
+        {% endif %}
+    </div>
 
 {% endblock %}
 

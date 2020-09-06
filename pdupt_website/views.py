@@ -155,14 +155,29 @@ def index(request):
 
         
         data_akhir,listdict,listvis2,datatopics,data_warna=SVG(topik)
-        topik1_data = getData_sumcount_topik(topik[0])[:3]
-        topik2_data = getData_sumcount_topik(topik[1])[:3]
-        topik3_data = getData_sumcount_topik(topik[2])[:3]
+        # topik1_data = getData_sumcount_topik(topik[0])[:3]
+        # topik2_data = getData_sumcount_topik(topik[1])[:3]
+        # topik3_data = getData_sumcount_topik(topik[2])[:3]
 
         topik_filter = Topics.objects.all().order_by('topic_name')
 
-        return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
+        if len(chk) == 1:
+            topik1_data, topik1 = getData_sumcount_topik(topik[0])
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1})
+        elif len(chk) == 2:
+            topik1_data, topik1 = getData_sumcount_topik(topik[0])
+            topik2_data, topik2 = getData_sumcount_topik(topik[1])
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2})
+        elif len(chk) == 3:
+            topik1_data, topik1 = getData_sumcount_topik(topik[0])
+            topik2_data, topik2 = getData_sumcount_topik(topik[1])
+            topik3_data, topik3 = getData_sumcount_topik(topik[2])
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2, 'topik3_data':topik3_data, 'topik3':topik3})
+
+
 
 def search(request):
     if request.method == 'POST':
@@ -521,8 +536,10 @@ def vis_author(nidn):
 
 
 def getData_sumcount_topik(top):
-    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')
-    return(data)
+    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[:3]
+    topic=Topics.objects.filter(id_topic=top).first()
+    print(topic)
+    return(data, topic)
 
 def rekomendasi(input):
     data = [input]

@@ -37,5 +37,6 @@ class Data_sumcount_topic(models.Model):
     year = models.CharField(max_length=25)
     pubcount = models.CharField(max_length=25)
     sumcite = models.CharField(max_length=25)
+    id_univ = models.CharField(max_length=20)
     class Meta:
         db_table = "data_sum_count_topic" 
