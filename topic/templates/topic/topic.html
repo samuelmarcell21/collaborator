@@ -97,7 +97,7 @@
 {% for topic in users %}
         <div class="topik" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 500px; height:140px; float:left; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
           <div class="logo-topik" style="width: 110px; float:left; height: 110px;">
-            <img style="width:100px; height:100px;" src="{% static 'author/img/'|add:'topik'|add:topic.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+            <img style="width:100px; height:100px;" src="{% static 'author/img/'|add:'topik'|add:topic.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Topik">
           </div>
           <div class="info-detail-topik" style=" margin-left:120px;">
             <a href="{{ topic.id_topic }}" style="color: #013880;">
