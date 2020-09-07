@@ -63,14 +63,24 @@
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
+                        <th>Best Paper</th>
                     </tr>
                 </thead>
                 <tbody style="font-size:10px; text-align:center">
                     {% for data in topik1_data %}
                         <tr>
                             <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-up" style="color:green;"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-down" style="color: red;"></i>
+                            </td>
+                            <td>
+                                <i class="far fa-newspaper" style="color: #013880;"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -84,14 +94,26 @@
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
+                        <th>Best Paper</th>
                     </tr>
                 </thead>
                 <tbody style="font-size:10px; text-align:center">
                     {% for data in topik2_data %}
                         <tr>
-                            <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.year }}
+                            </td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-up" style="color:green;"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-down" style="color: red;"></i>
+                            </td>
+                            <td>
+                                <i class="far fa-newspaper" style="color: #013880;"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -105,14 +127,24 @@
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
+                        <th>Best Paper</th>
                     </tr>
                 </thead>
                 <tbody style="font-size:10px; text-align:center">
                     {% for data in topik3_data %}
                         <tr>
                             <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-up" style="color:green;"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-down" style="color: red;"></i>
+                            </td>
+                            <td>
+                                <i class="far fa-newspaper" style="color: #013880;"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -123,31 +155,37 @@
     <div class="author-rekomen">
         <div style="width:100%;">
             {% for author in author_rekomen1 %}
-            <div class="author-rekomen1" style="text-align:center;height:250px; border-radius:20px; width:30%; background-color:white; padding:30px 20px; float:left; margin-right:13px; margin-bottom:20px;">
+            <div class="author-rekomen1" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px; margin-bottom:20px;">
                 <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
                 <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
-                <p style="font-size:11px;"> {{ author.nilai_dominan1 }} Publications </p>
-                <p style="font-size:11px;"></p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
+                <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
             </div>
             {% endfor %}
         </div>
         <div style="width:100%; margin-top:30px;">
             {% for author in author_rekomen2 %}
-            <div class="author-rekomen2" style="text-align:center;height:250px; border-radius:20px; width:30%; background-color:white; padding:30px 20px; float:left; margin-right:13px; margin-bottom:20px;">
+            <div class="author-rekomen2" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px; margin-bottom:20px;">
                 <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
                 <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
-                <p style="font-size:11px;"> {{ author.nilai_dominan1 }} Publications </p>
-                <p style="font-size:11px;"></p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
+                <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
             </div>
             {% endfor %}
         </div>
         <div style="width:100%;">
             {% for author in author_rekomen3 %}
-            <div class="author-rekomen3" style="text-align:center;height:250px; border-radius:20px; width:30%; background-color:white; padding:30px 20px; float:left; margin-right:13px;">
+            <div class="author-rekomen3" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px;">
                 <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
                 <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
-                <p style="font-size:11px;"> {{ author.nilai_dominan1 }} Publications </p>
-                <p style="font-size:11px;"></p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
+                <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
+                <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
             </div>
             {% endfor %}
         </div>
@@ -210,7 +248,8 @@
     <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:auto; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px;">
         <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
         <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
-        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px;"> {{ paper.topic.topic_name }} </p>
+        <img style="width:27px; height:27px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
     </div>
     {% endfor %}
 </div>

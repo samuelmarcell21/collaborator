@@ -178,10 +178,10 @@ def show_detailaffiliation(request, *args, **kwargs):
 
         # print(data_sumcount)
 
-        author_rekomen1 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan1_id).order_by('-nilai_dominan1')[:3]
+        author_rekomen1 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan1_id).order_by('-nilai_dominan1')[:2]
         # print(author_rekomen1)
-        author_rekomen2 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan2_id).order_by('-nilai_dominan1')[:3]
-        author_rekomen3 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan3_id).order_by('-nilai_dominan1')[:3]
+        author_rekomen2 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan2_id).order_by('-nilai_dominan1')[:2]
+        author_rekomen3 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan3_id).order_by('-nilai_dominan1')[:2]
 
         return render(request, 'affiliation/detail_affiliation.html', {'univs': univ, 'users': users,'data_count':list_count,
         'data_sum':list_sum, 'nama_topik': topic,'data_sumcount':data_sumcount, 'author_rekomen1':author_rekomen1, 'author_rekomen2':author_rekomen2, 'author_rekomen3':author_rekomen3, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
