@@ -107,9 +107,9 @@ def index(request):
         topik=[1,16,11]
 
         data_akhir,listdict,listvis2,datatopics,data_warna=SVG(topik)
-        topik1_data = getData_sumcount_topik(topik[0])[:3]
-        topik2_data = getData_sumcount_topik(topik[1])[:3]
-        topik3_data = getData_sumcount_topik(topik[2])[:3]
+        topik1_data,topik1 = getData_sumcount_topik(topik[0])[:3]
+        topik2_data,topik2 = getData_sumcount_topik(topik[1])[:3]
+        topik3_data,topik3 = getData_sumcount_topik(topik[2])[:3]
 
         topik_filter = Topics.objects.all().order_by('topic_name')
 
