@@ -113,12 +113,12 @@ def index(request):
 def show_detailtopic(request, *args, **kwargs):
     topic_id = kwargs['id_topic']
     topic = Topics.objects.get(id_topic=topic_id)
-    paper = Papers.objects.filter(topic=topic_id)[:100]
+    paper = Papers.objects.filter(topic=topic_id)[:25]
 
-    author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:12]
+    author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:6]
     
     page = request.GET.get('page', 1)
-    paginator = Paginator(paper, 20)
+    paginator = Paginator(paper, 5)
 
     try:
         users = paginator.page(page)
@@ -385,6 +385,6 @@ def SVG_sub(tops):
     # return render(request, 'author/SVG.html',{'data':data_akhir,'nama_top':listdict,'data2':listvis2,'datatopics':datatopics})
 
 def getData_sumcount_topik(top):
-    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[1:6]
-    data2=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[7:12]
+    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[:5]
+    data2=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[6:11]
     return(data, data2)
