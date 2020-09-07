@@ -32,14 +32,14 @@
     </div>
     <div class="info-detail-affiliation" style=" margin-left:20px;">
         <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ univs.name }} </strong>  </p>
-        <p style="font-size:15px;"> <strong style="font-size: 20px;"> {{ univs.total_publication }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ univs.total_cite }} </strong> Citations &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ univs.total_author }} </strong> Authors  </p>
-        <a href="/topic/{{ univs.topik_dominan1 }}">
+        <p style="font-size:15px;"> <strong style="font-size: 20px; color:#013880;"> <i class="far fa-newspaper"></i> {{ univs.total_publication }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-quote-left"></i> {{ univs.total_cite }} </strong> Citations &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-user"></i>  {{ univs.total_author }} </strong> Authors  </p>
+        <a href="/topic/{{ univs.topik_dominan1.id_topic }}">
             <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ univs.topik_dominan1.topic_name }} </p>
         </a>
-        <a href="/topic/{{ univs.topik_dominan2 }}">
+        <a href="/topic/{{ univs.topik_dominan2.id_topic }}">
             <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ univs.topik_dominan2.topic_name }} </p>
         </a>
-        <a href="/topic/{{ univs.topik_dominan3 }}">
+        <a href="/topic/{{ univs.topik_dominan3.id_topic }}">
             <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ univs.topik_dominan3.topic_name }} </p>
         </a>
     </div>

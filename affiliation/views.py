@@ -117,7 +117,7 @@ def show_detailaffiliation(request, *args, **kwargs):
         nidn_fix = []
         for i in nidn:
             nidn_fix.append(i['nidn'])
-        paper = Papers.objects.filter(author__in=nidn_fix, topic=chk[0])[:100]
+        paper = Papers.objects.filter(author__in=nidn_fix, topic=chk[0])[:25]
         # topik_affi = Papers.objects.filter(author__in=nidn_fix).value('topic').distinct()
         # topik = []
         # for i in topik_affi:
@@ -129,7 +129,7 @@ def show_detailaffiliation(request, *args, **kwargs):
 
         # models.Shop.objects.order_by().values('city').distinct()
         page = request.GET.get('page', 1)
-        paginator = Paginator(paper, 20)
+        paginator = Paginator(paper, 5)
 
         try:
             users = paginator.page(page)
@@ -154,10 +154,10 @@ def show_detailaffiliation(request, *args, **kwargs):
         nidn_fix = []
         for i in nidn:
             nidn_fix.append(i['nidn'])
-        paper = Papers.objects.filter(author__in=nidn_fix)[:100]
+        paper = Papers.objects.filter(author__in=nidn_fix)[:25]
         # models.Shop.objects.order_by().values('city').distinct()
         page = request.GET.get('page', 1)
-        paginator = Paginator(paper, 20)
+        paginator = Paginator(paper, 5)
 
         try:
             users = paginator.page(page)
