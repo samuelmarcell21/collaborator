@@ -536,10 +536,41 @@ def vis_author(nidn):
 
 
 def getData_sumcount_topik(top):
-    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[:3]
+    datasumcount=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')
     topic=Topics.objects.filter(id_topic=top).first()
-    print(topic)
-    return(data, topic)
+    df = pd.DataFrame.from_records(datasumcount.values_list(),columns=['id','idTopic','Year','Count','Sumcite','id_univ'])
+    Year=df['Year']
+    Count=df['Count']
+    Sumcite=df['Sumcite']
+    id_univ=df['id_univ']
+    leng=len(Year)
+    pubstat=['-']*leng
+    pubcolor=['-']*leng
+    citestat=['-']*leng
+    citecolor=['-']*leng
+    # print(df)
+    for i in range(len(Year)-1):
+        if(int(Count[i])==int(Count[i+1])):
+            pubstat[i]='-'
+        elif(int(Count[i])>int(Count[i+1])):
+            pubstat[i]='up'
+            pubcolor[i]='green'
+        else:
+            pubstat[i]='down'
+            pubcolor[i]='red'
+        if(int(Sumcite[i])==int(Sumcite[i+1])):
+            citestat[i]='-'          
+        elif(int(Sumcite[i])>int(Sumcite[i+1])):
+            citestat[i]='up'
+            citecolor[i]='green'
+        else:
+            citestat[i]='down'
+            citecolor[i]='red'
+    # print(pubstat,citestat)
+    new_df = pd.DataFrame({'year':Year, 'pubcount':Count, 'sumcite':Sumcite,'citestat':citestat,'pubstat':pubstat,'id_univ':id_univ,'pubcolor':pubcolor,'citecolor':citecolor})
+    data=new_df.to_dict('records')
+    # bisa di batasin jumlah row yang mau d passing di sini
+    return(data[:3], topic)
 
 def rekomendasi(input):
     data = [input]

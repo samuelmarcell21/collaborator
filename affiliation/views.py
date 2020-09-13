@@ -139,10 +139,10 @@ def show_detailaffiliation(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
         ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
-        data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
-        data_sumcount=data_sumcount.to_dict('records')
-        print(data_sumcount)
+        # topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
+        # data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
+        # data_sumcount=data_sumcount.to_dict('records')
+        # print(data_sumcount)
         return render(request, 'affiliation/detail_affiliation_filter.html', {'univs': univ, 'users': users,'data_count':list_count,
         'data_sum':list_sum, 'nama_topik': topic, 'chk':chk[0],'data_sumcount':data_sumcount})
     
@@ -166,15 +166,14 @@ def show_detailaffiliation(request, *args, **kwargs):
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
-        topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
 
         ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
-        data_sumcount=data_sumcount.to_dict('records')
-
-        topik1_data = Data_sumcount_univ.objects.filter(univ=id_univ,topic=univ.topik_dominan1_id).order_by('-year')[:3]
-        topik2_data = Data_sumcount_univ.objects.filter(univ=id_univ,topic=univ.topik_dominan2_id).order_by('-year')[:3]
-        topik3_data = Data_sumcount_univ.objects.filter(univ=id_univ,topic=univ.topik_dominan3_id).order_by('-year')[:3]
+        # topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
+        # data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
+        # data_sumcount=data_sumcount.to_dict('records')
+        topik1_data = getData_sumcount_univ(id_univ,univ.topik_dominan1_id)
+        topik2_data = getData_sumcount_univ(id_univ,univ.topik_dominan2_id)
+        topik3_data = getData_sumcount_univ(id_univ,univ.topik_dominan3_id)
 
         # print(data_sumcount)
 
@@ -184,7 +183,7 @@ def show_detailaffiliation(request, *args, **kwargs):
         author_rekomen3 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan3_id).order_by('-nilai_dominan1')[:2]
 
         return render(request, 'affiliation/detail_affiliation.html', {'univs': univ, 'users': users,'data_count':list_count,
-        'data_sum':list_sum, 'nama_topik': topic,'data_sumcount':data_sumcount, 'author_rekomen1':author_rekomen1, 'author_rekomen2':author_rekomen2, 'author_rekomen3':author_rekomen3, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
+        'data_sum':list_sum, 'nama_topik': topic, 'author_rekomen1':author_rekomen1, 'author_rekomen2':author_rekomen2, 'author_rekomen3':author_rekomen3, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
     
 
 def color(row):
@@ -294,3 +293,42 @@ def sortData_sumcount_univ(df_countsum,id_univ):
     df_countsum['Urutan']=df_countsum.apply(urutan,axis=1)
     df_countsum=df_countsum.sort_values(by=['Urutan','Year'],ascending=[True,False])
     return(df_countsum)
+
+def getData_sumcount_univ(id_univ,top):
+    datasumcount=Data_sumcount_univ.objects.filter(univ=id_univ,topic=top).order_by('-year')
+    # temp=datasumcount.values_list()
+    df = pd.DataFrame.from_records(datasumcount.values_list(),columns=['id','idTopic','id_univ','Year','Count','Sumcite','id_pub'])
+    id_univ = df['id_univ']
+    Year=df['Year']
+    Count=df['Count']
+    Sumcite=df['Sumcite']
+    id_pub=df['id_pub']
+    leng=len(Year)
+    pubstat=['-']*leng
+    pubcolor=['-']*leng
+    citestat=['-']*leng
+    citecolor=['-']*leng
+    # print(df)
+    for i in range(len(Year)-1):
+        if(int(Count[i])==int(Count[i+1])):
+            pubstat[i]='-'
+        elif(int(Count[i])>int(Count[i+1])):
+            pubstat[i]='up'
+            pubcolor[i]='green'
+        else:
+            pubstat[i]='down'
+            pubcolor[i]='red'
+        if(int(Sumcite[i])==int(Sumcite[i+1])):
+            citestat[i]='-'          
+        elif(int(Sumcite[i])>int(Sumcite[i+1])):
+            citestat[i]='up'
+            citecolor[i]='green'
+        else:
+            citestat[i]='down'
+            citecolor[i]='red'
+    # print(pubstat,citestat)
+    new_df = pd.DataFrame({'year':Year, 'pubcount':Count, 'sumcite':Sumcite,'citestat':citestat,'pubstat':pubstat,'id_pub':id_pub,'pubcolor':pubcolor,'citecolor':citecolor})
+    data=new_df.to_dict('records')
+    # bisa di batasin jumlah row yang mau d passing di sini
+    print(data[:3])
+    return(data[:3])

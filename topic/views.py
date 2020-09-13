@@ -129,13 +129,13 @@ def show_detailtopic(request, *args, **kwargs):
 
     subtopik=topic.topik_subtopik.all()
     # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
-    data_akhir,listvis2=SVG_sub(subtopik.values_list('id_SubTopic'))
+    data_akhir=SVG_sub(subtopik.values_list('id_SubTopic'))
 
     print(subtopik)
 
     ##sumcount
     data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
-    return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir,'data2':listvis2, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2})
+    return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2})
 
 
 # fungsi svg
@@ -372,19 +372,56 @@ def SVG_sub(tops):
     dfvis2 = dfvis2.astype({"Topik": int, "Year": float, "batasAtas": float})
     dfvis2= dfvis2[dfvis2['Year']>2017]
     dfvis2['Color']=dfvis2.apply(color,axis=1)
-    listvis2=[]
-    flag=0
-    for top in dfvis2.Topik.unique():
-        datay=[]
-        for index,row in dfvis2[dfvis2['Topik']==top].iterrows():
-            datay.append(row['batasAtas'])
-        data={'x':listdict[flag]['name'],'y':datay,'Color':row['Color']}
-        flag+=1
-        listvis2.append(data)
-    return(data_akhir,listvis2)
+    # listvis2=[]
+    # flag=0
+    # for top in dfvis2.Topik.unique():
+    #     datay=[]
+    #     for index,row in dfvis2[dfvis2['Topik']==top].iterrows():
+    #         datay.append(row['batasAtas'])
+    #     data={'x':listdict[flag]['name'],'y':datay,'Color':row['Color']}
+    #     flag+=1
+    #     listvis2.append(data)
+    return(data_akhir)
     # return render(request, 'author/SVG.html',{'data':data_akhir,'nama_top':listdict,'data2':listvis2,'datatopics':datatopics})
 
+# def getData_sumcount_topik(top):
+#     data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[:5]
+#     data2=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[6:11]
+#     return(data, data2)
+
 def getData_sumcount_topik(top):
-    data=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[:5]
-    data2=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')[6:11]
-    return(data, data2)
+    datasumcount=Data_sumcount_topic.objects.filter(topic_id=top).order_by('-year')
+    topic=Topics.objects.filter(id_topic=top).first()
+    df = pd.DataFrame.from_records(datasumcount.values_list(),columns=['id','idTopic','Year','Count','Sumcite','id_univ'])
+    Year=df['Year']
+    Count=df['Count']
+    Sumcite=df['Sumcite']
+    id_univ=df['id_univ']
+    leng=len(Year)
+    pubstat=['-']*leng
+    pubcolor=['-']*leng
+    citestat=['-']*leng
+    citecolor=['-']*leng
+    # print(df)
+    for i in range(len(Year)-1):
+        if(int(Count[i])==int(Count[i+1])):
+            pubstat[i]='-'
+        elif(int(Count[i])>int(Count[i+1])):
+            pubstat[i]='up'
+            pubcolor[i]='green'
+        else:
+            pubstat[i]='down'
+            pubcolor[i]='red'
+        if(int(Sumcite[i])==int(Sumcite[i+1])):
+            citestat[i]='-'          
+        elif(int(Sumcite[i])>int(Sumcite[i+1])):
+            citestat[i]='up'
+            citecolor[i]='green'
+        else:
+            citestat[i]='down'
+            citecolor[i]='red'
+    # print(pubstat,citestat)
+    new_df = pd.DataFrame({'year':Year, 'pubcount':Count, 'sumcite':Sumcite,'citestat':citestat,'pubstat':pubstat,'id_univ':id_univ,'pubcolor':pubcolor,'citecolor':citecolor})
+    data=new_df.to_dict('records')
+    # bisa di batasin jumlah row yang mau d passing di sini
+    return(data[:5], data[6:11])    

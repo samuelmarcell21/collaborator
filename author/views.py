@@ -94,19 +94,19 @@ def show_detailauthor(request, *args, **kwargs):
     df_countsum,list_count,list_sum=vis_author(nidn_author)
 
     ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-    topik_sumcount=[author.topik_dominan1_id,author.topik_dominan2_id,author.topik_dominan3_id]  
-    data_sumcount=sortData_sumcount_author(df_countsum,nidn_author)
-    data_sumcount=data_sumcount.to_dict('records')
+    # topik_sumcount=[author.topik_dominan1_id,author.topik_dominan2_id,author.topik_dominan3_id]  
+    # data_sumcount=sortData_sumcount_author(df_countsum,nidn_author)
+    # data_sumcount=data_sumcount.to_dict('records')
 
-    topik1_data = Data_sumcount_author.objects.filter(author=nidn_author,topic=author.topik_dominan1_id).order_by('-year')[:3]
-    topik2_data = Data_sumcount_author.objects.filter(author=nidn_author,topic=author.topik_dominan2_id).order_by('-year')[:3]
-    topik3_data = Data_sumcount_author.objects.filter(author=nidn_author,topic=author.topik_dominan3_id).order_by('-year')[:3]
+    topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
+    topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
+    topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
 
     rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:5]
 
     # print(data_sumcount)
     return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
-    'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik,'data_sumcount':data_sumcount, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
+    'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
 
 # fungsi svg
 #fungsi scaling kolom batas atas
@@ -460,3 +460,40 @@ def sortData_sumcount_author(df_countsum,nidn):
     df_countsum=df_countsum[df_countsum['Count'] != 0]
     return(df_countsum)
     
+def getData_sumcount_Author(nidn,top):
+    datasumcount=Data_sumcount_author.objects.filter(author=nidn,topic=top).order_by('-year')
+    temp=datasumcount.values_list()
+    df = pd.DataFrame.from_records(datasumcount.values_list(),columns=['id','idTopic','NIDN','Year','Count','Sumcite','id_pub'])
+    NIDN = df['NIDN']
+    Year=df['Year']
+    Count=df['Count']
+    Sumcite=df['Sumcite']
+    id_pub=df['id_pub']
+    leng=len(Year)
+    pubstat=['-']*leng
+    pubcolor=['-']*leng
+    citestat=['-']*leng
+    citecolor=['-']*leng
+    # print(df)
+    for i in range(len(Year)-1):
+        if(int(Count[i])==int(Count[i+1])):
+            pubstat[i]='-'
+        elif(int(Count[i])>int(Count[i+1])):
+            pubstat[i]='up'
+            pubcolor[i]='green'
+        else:
+            pubstat[i]='down'
+            pubcolor[i]='red'
+        if(int(Sumcite[i])==int(Sumcite[i+1])):
+            citestat[i]='-'          
+        elif(int(Sumcite[i])>int(Sumcite[i+1])):
+            citestat[i]='up'
+            citecolor[i]='green'
+        else:
+            citestat[i]='down'
+            citecolor[i]='red'
+    # print(pubstat,citestat)
+    new_df = pd.DataFrame({'year':Year, 'pubcount':Count, 'sumcite':Sumcite,'citestat':citestat,'pubstat':pubstat,'id_pub':id_pub,'pubcolor':pubcolor,'citecolor':citecolor})
+    data=new_df.to_dict('records')
+    # bisa di batasin jumlah row yang mau d passing di sini
+    return(data[:3])

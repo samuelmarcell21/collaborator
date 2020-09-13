@@ -67,8 +67,14 @@
                     {% for data in topik1_data %}
                         <tr>
                             <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-{{ data.pubstat }}" style="color:{{ data.pubcolor }};"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-{{ data.citestat }}" style="color:{{ data.citecolor }};"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -88,8 +94,14 @@
                     {% for data in topik2_data %}
                         <tr>
                             <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-{{ data.pubstat }}" style="color:{{ data.pubcolor }};"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-{{ data.citestat }}" style="color:{{ data.citecolor }};"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -109,8 +121,14 @@
                     {% for data in topik3_data %}
                         <tr>
                             <td>{{ data.year }}</td>
-                            <td>{{ data.pubcount }}</td>
-                            <td>{{ data.sumcite }}</td>
+                            <td>
+                                {{ data.pubcount }}
+                                <i class="fas fa-arrow-circle-{{ data.pubstat }}" style="color:{{ data.pubcolor }};"></i>
+                            </td>
+                            <td>
+                                {{ data.sumcite }}
+                                <i class="fas fa-arrow-circle-{{ data.citestat }}" style="color:{{ data.citecolor }};"></i>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

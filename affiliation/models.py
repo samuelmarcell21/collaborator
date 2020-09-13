@@ -26,5 +26,6 @@ class Data_sumcount_univ(models.Model):
     year = models.CharField(max_length=25)
     pubcount = models.CharField(max_length=25)
     sumcite = models.CharField(max_length=25)
+    id_pub = models.CharField(max_length=25)
     class Meta:
         db_table = "data_sum_count_univ" 
