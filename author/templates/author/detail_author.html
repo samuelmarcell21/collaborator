@@ -26,11 +26,14 @@
 
 <div class="info-author" style="margin-top:40px; margin-left:65px; width:100%;">
     <div class="logo" style="width: 140px; float:left; height: 125px;">
-        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:111px; height:111px; border-radius: 50%;">
+        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:130px; height:130px; border-radius: 50%;">
     </div>
-    <div class="info-detail-author" style=" margin-left:20px;">
+    <div class="info-detail-author" style=" margin-left:150px;">
         <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
-        <p style="font-size:15px;"> <strong style="font-size: 20px;"> {{ countpub }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ sumcite }} </strong> Citations </p>
+        <p style="margin-bottom:5px;">
+            {{ author.univ.name }}
+        </p>
+        <p style="font-size:15px; margin-bottom:5px;"> <strong style="font-size: 20px; color:#013880;"> <i class="far fa-newspaper"></i> {{ countpub }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-quote-left"></i> {{ sumcite }} </strong> Citations </p>
         <a href="/topic/{{ author.topik_dominan1 }}">
             <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
         </a>
