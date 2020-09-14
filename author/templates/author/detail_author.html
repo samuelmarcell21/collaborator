@@ -139,6 +139,7 @@
         </div>
     </div>
     <p style="text-align:left; margin-top:50px;"> <strong>Top Authors by Similarities</strong> </p>
+    {% load static %}
     {% for author in rekomen_author %}
         <div style="background-color:white; border-radius:30px; padding:20px; margin-bottom:20px;">
             <div class="logo" style="width: 90px; height: 100px;float:left; margin-right:20px;">
@@ -146,14 +147,19 @@
             </div>
             <div class="info-detail-affiliation" style=" margin-left:20px; text-align:left;">
                 <p style="font-size:16px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
-                <p style="font-size:13px;"> <strong style="font-size: 20px;"> {{ author.nilai_dominan1 }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px;"> {{ author.citations }} </strong> Citations </p>
-                <a href="/topic/{{ author.topik_dominan1 }}">
+                <p style="font-size:13px; margin-bottom:5px; color:black;">Score: {{ author.overall_score }} </p>
+                <p style="font-size: 13px; margin-bottom:5px; color:black;"> {{ author.univ.name }} </p>
+                <br>
+                <a href="/topic/{{ author.topik_dominan1.id_topic }}">
+                    <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
                     <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
                 </a>
-                <a href="/topic/{{ author.topik_dominan2 }}">
+                <a href="/topic/{{ author.topik_dominan2.id_topic }}">
+                    <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan2.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 2">
                     <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan2.topic_name }} </p>
                 </a>
-                <a href="/topic/{{ author.topik_dominan3 }}">
+                <a href="/topic/{{ author.topik_dominan3.id_topic }}">
+                    <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan3.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 3">
                     <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan3.topic_name }} </p>
                 </a>
             </div>
