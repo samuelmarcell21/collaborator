@@ -78,7 +78,7 @@ def show_detailauthor(request, *args, **kwargs):
     print(topik)
     nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
-    paper = paper_author.filter(author=nidn_author)[:100]
+    paper = paper_author.filter(author=nidn_author)[:25]
 
     page = request.GET.get('page', 1)
     paginator = Paginator(paper, 5)
@@ -102,7 +102,7 @@ def show_detailauthor(request, *args, **kwargs):
     topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
     topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
 
-    rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:5]
+    rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
 
     # print(data_sumcount)
     return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
