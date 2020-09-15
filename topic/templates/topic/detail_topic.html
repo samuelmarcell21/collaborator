@@ -125,8 +125,8 @@
     </div>
 </div>
 <br><br><br><br><br><br>
-    <p style="margin-left:65px; color: #013880;"> <strong>Publications & Topics Over Time</strong> </p>
-    <div class="visualisasiSVG" class="text-center" style="width:97%; height:540px; margin: 20px; background-color:white; border:1px solid gray; border-radius:20px;">
+<p style="margin-left:65px; color: #013880; width:40%;"> <strong>Publications & Topics Over Time</strong> </p>
+<div class="visualisasiSVG" class="text-center" style="width:63%; height:540px; margin: 20px; background-color:white; border:1px solid gray; border-radius:20px; float:left;">
         <div class="filter" style="width:15%; float:left; margin-left:50px; margin-top:50px;">
             <form action="" method="POST">
                 {% csrf_token %}
@@ -139,7 +139,7 @@
             </form>
         </div>
         <div class="svg" style="width:55%; height:500px; float:left;" >
-            <svg overflow='scroll' id='vis' width='1600' height='700' transform='scale(0.5) translate(-800 -200)' z-index='1'>
+            <svg overflow='scroll' id='vis' width='1600' height='700' transform='scale(0.45) translate(-900 -200)' z-index='1'>
                 <g>
                     <g class="axis" transform="translate(0,0)">
                         <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
@@ -240,132 +240,31 @@
                 </g>
             </svg>
         </div>
-        <div class="top-3-topik" style="width:26%; float:right; text-align:center;  margin-top:40px;">
-            <p style="text-align:center;">Jumlah Publikasi dalam 3 Tahun Terakhir</p>
-            <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%;margin-bottom: 30px;">
-                <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">Nanocomposite</p>
-                <table style="margin-left:20px; margin-right:20px; width:100%; ">
-                    <thead style="font-size:12px;">
-                        <tr>
-                            <th>Year</th>
-                            <th>Publication</th>
-                            <th>Citation</th>
-                            <th>Best Affiliation</th>
-                        </tr>
-                    </thead>
-                    <tbody style="font-size:12px; text-align:center">
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%;margin-bottom: 30px;">
-                <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">Polymer</p>
-                <table style="margin-left:20px; margin-right:20px; width:100%; ">
-                    <thead style="font-size:12px;">
-                        <tr>
-                            <th>Year</th>
-                            <th>Publication</th>
-                            <th>Citation</th>
-                            <th>Best Affiliation</th>
-                        </tr>
-                    </thead>
-                    <tbody style="font-size:12px; text-align:center">
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="topik-1" style="border-radius: 20px; border:1px black solid; width: 95%;">
-                <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">Nickel</p>
-                <table style="margin-left:20px; margin-right:20px; width:100%;">
-                    <thead style="font-size:12px;">
-                        <tr>
-                            <th>Year</th>
-                            <th>Publication</th>
-                            <th>Citation</th>
-                            <th>Best Affiliation</th>
-                        </tr>
-                    </thead>
-                    <tbody style="font-size:12px; text-align:center">
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2020</td>
-                            <td>123</td>
-                            <td>124</td>
-                            <td>
-                                <img style="width:15px; height:15px;" src="{% static 'author/img/1.png' %}" style="position: relative;" alt="Logo Afiliasi">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-    </div>
     </div>
 
-<div class="publication-affi" style="margin-left:65px; margin-top:30px; width:60%; float:left;">
+    <div class="info-per-topik" style="text-align:center;width:28%; float:right;  margin-right:65px; position:relative; top:-40px;">
+        <p style="text-align:left; color: #013880;"> <strong>Top Author</strong> </p>
+        <div class="author-rekomen" style="margin-top: 35px;">
+            <div style="width:100%;">
+                {% for author in author %}
+                <div class="author-rekomen1" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px; margin-bottom:20px;">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
+                    <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
+                    <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
+                    <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
+                    <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
+                
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+<div class="publication-affi" style="margin-left:65px; margin-top:30px; width:95%; float:left;">
     <p style="color: #013880;"> <strong>Publications</strong> </p>
     {% if users.has_other_pages %}
-                    <nav aria-label="Page navigation example" style="margin-bottom: 40px;">
+                    <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:60px;">
                         <ul class="pagination justify-content-end">
                             {% if users.has_other_pages %}
                             <nav aria-label="Page navigation example">
@@ -415,32 +314,16 @@
         </form>
     </div>
     {% for paper in users %}
-    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:auto; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px;">
+    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:160px; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px; margin-right:60px; margin-bottom: 30px;">
         <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
         <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
-        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px;"> {{ paper.subtopic.subtopic_name }} </p>
+        <img style="width:27px; height:27px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.subtopic.subtopic_name }} </p>
     </div>
     {% endfor %}
 </div>
 
-<div class="info-per-topik" style="text-align:center;width:28%; float:right;  margin-right:65px;">
-    <p style="text-align:left; margin-top:30px; color: #013880;"> <strong>Top Author</strong> </p>
-    <div class="author-rekomen">
-        <div style="width:100%;">
-            {% for author in author %}
-            <div class="author-rekomen1" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px; margin-bottom:20px;">
-                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
-                <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
-                <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
-                <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
-                <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-                <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
-            
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+
 
 
 {% endblock %}

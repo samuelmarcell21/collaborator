@@ -113,12 +113,12 @@ def index(request):
 def show_detailtopic(request, *args, **kwargs):
     topic_id = kwargs['id_topic']
     topic = Topics.objects.get(id_topic=topic_id)
-    paper = Papers.objects.filter(topic=topic_id)[:25]
+    paper = Papers.objects.filter(topic=topic_id)[:20]
 
-    author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:6]
+    author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
     
     page = request.GET.get('page', 1)
-    paginator = Paginator(paper, 5)
+    paginator = Paginator(paper, 4)
 
     try:
         users = paginator.page(page)
