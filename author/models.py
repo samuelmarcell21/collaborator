@@ -60,7 +60,7 @@ class Papers(models.Model):
     authors = models.CharField(max_length=2000)
     year = models.CharField(max_length=4)
     topic = models.ForeignKey(Topics, on_delete=models.CASCADE,db_column="id_topic",to_field='id_topic',related_name="id_topic_paper")
-    subtopic = models.ForeignKey(Subtopics, on_delete=models.CASCADE,db_column="id_subtopic", to_field='id_SubTopic', related_name='id_subtopic_paper')
+    id_subtopic = models.CharField(max_length=20)
     class Meta:
         db_table = "dataset_publication"
 

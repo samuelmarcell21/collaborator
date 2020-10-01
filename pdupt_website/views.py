@@ -111,10 +111,22 @@ def index(request):
         topik2_data,topik2 = getData_sumcount_topik(topik[1])[:3]
         topik3_data,topik3 = getData_sumcount_topik(topik[2])[:3]
 
+        ambiltopik = Topics.objects.filter(id_topic__in=topik)
+
+        namatopik = []
+        for i in ambiltopik:
+            namatopik.append(i.topic_name)
+
+        warna_legend = []
+        for i in topik:
+            warna_legend.append(warna[int(i)])
+
+        zipped = zip(warna_legend, namatopik)
+
         topik_filter = Topics.objects.all().order_by('topic_name')
 
         return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data})
+        'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'legend': zipped})
 
     else:
         chk = request.POST.getlist('id_topik')
@@ -153,6 +165,19 @@ def index(request):
         for i in chk:
             topik.append(int(i))
 
+        warna_legend = []
+        for i in chk:
+            warna_legend.append(warna[int(i)])
+
+        print(warna_legend)
+
+        ambiltopik = Topics.objects.filter(id_topic__in=topik)
+
+        namatopik = []
+        for i in ambiltopik:
+            namatopik.append(i.topic_name)
+
+        zipped = zip(warna_legend, namatopik)
         
         data_akhir,listdict,listvis2,datatopics,data_warna=SVG(topik)
         # topik1_data = getData_sumcount_topik(topik[0])[:3]
@@ -163,21 +188,19 @@ def index(request):
 
         if len(chk) == 1:
             topik1_data, topik1 = getData_sumcount_topik(topik[0])
-            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1})
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik1, 'topik_2':topik2, 'topik_3':topik3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'legend': zipped})
         elif len(chk) == 2:
             topik1_data, topik1 = getData_sumcount_topik(topik[0])
             topik2_data, topik2 = getData_sumcount_topik(topik[1])
-            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2})
-        elif len(chk) == 3:
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik1, 'topik_2':topik2, 'topik_3':topik3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2, 'legend': zipped})
+        elif len(chk) >= 3:
             topik1_data, topik1 = getData_sumcount_topik(topik[0])
             topik2_data, topik2 = getData_sumcount_topik(topik[1])
             topik3_data, topik3 = getData_sumcount_topik(topik[2])
-            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik_1, 'topik_2':topik_2, 'topik_3':topik_3,
-            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2, 'topik3_data':topik3_data, 'topik3':topik3})
-
-
+            return render(request, 'find.html', {'affi_1':affi_1, 'affi_2':affi_2, 'affi_3':affi_3, 'author_1':author_1, 'author_2':author_2, 'author_3':author_3, 'topik_1':topik1, 'topik_2':topik2, 'topik_3':topik3,
+            'data':data_akhir,'nama_top':listdict,'datatopics':datatopics, 'topik_filter':topik_filter, 'topik1_data': topik1_data, 'topik1':topik1, 'topik2_data':topik2_data, 'topik2':topik2, 'topik3_data':topik3_data, 'topik3':topik3, 'legend': zipped})
 
 def search(request):
     if request.method == 'POST':
@@ -574,10 +597,10 @@ def getData_sumcount_topik(top):
 
 def rekomendasi(input):
     data = [input]
-    id2word = Dictionary.load('pdupt_website/id2word_new.dict')
-    corpus = MmCorpus('pdupt_website/corpus_new.mm')
-    df = pd.read_csv('pdupt_website/reduksifix.csv')
-    with open("pdupt_website/lemma_new.txt", "rb") as fp:   #Pickling
+    id2word = Dictionary.load('pdupt_responsive/id2word_new.dict')
+    corpus = MmCorpus('pdupt_responsive/corpus_new.mm')
+    df = pd.read_csv('pdupt_responsive/reduksifix.csv')
+    with open("pdupt_responsive/lemma_new.txt", "rb") as fp:   #Pickling
         data_lemmatized=pickle.load(fp)
     stop_words = stopwords.words('indonesian')
     stop_words2 = stopwords.words('english')
@@ -647,7 +670,7 @@ def rekomendasi(input):
             data_lemmatized_search[x][y] = stemmer.stem(data_lemmatized_search[x][y])
 
             # import gensim
-    model = gensim.models.ldamodel.LdaModel.load('pdupt_website/mallet_18_lda.mdl', mmap='r') 
+    model = gensim.models.ldamodel.LdaModel.load('pdupt_responsive/mallet_18_lda.mdl', mmap='r') 
     new_doc_bow = id2word.doc2bow(data_lemmatized_search[0])
     hasil = model.get_document_topics(new_doc_bow)
 

@@ -1,48 +1,251 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Collaborator</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/author">Author</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/topic" style="background-color: white; color: #013880;">Topic</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/affiliation">Affiliation</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+{% block header %}
+
+<style>
+
+    .detail-topik{
+        margin: 40px;
+        display: grid;
+        grid-template-areas: 
+        'header header datatopik datatopik'
+        'pubjs pubjs pubjs topauthor'
+        'publication publication publication publication';
+        grid-template-columns: 1fr 1fr 0.65fr 1.35fr;
+        gap: 20px;
+    }
+
+    header{
+        grid-area: header;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .datatopik{
+        grid-area: datatopik;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .pubjs{
+        grid-area: pubjs;
+        border: 1px solid black;
+        padding: 20px;
+        max-height: 600px;
+    }
+
+    .topauthor{
+        grid-area: topauthor;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .publication{
+        grid-area: publication;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .detail-topik .info-topik h3{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .detail-topik .info-topik .subtopik{
+        text-decoration: none;
+        color: inherit;
+        margin-right: 15px !important;
+        outline-style: solid;
+        outline-color: black;
+        padding: 5px !important;
+        outline-width: 1px;
+        background-color: #fff;
+    }
+
+    p{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .detail-topik .info-topik span{
+        font-size: 20px;
+        color: #013880;
+    }
+
+    .datatopik h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .datatopik table{
+        font-size: 14px;
+        margin: 10px auto;
+    }
+
+    .datatopik th{
+        padding-left: 10px !important;
+    }
+
+    .datatopik td{
+        padding-left: 10px !important;
+    }
+
+    .pubjs h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .topauthor h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .topauthor .author-rekomen1{
+        background-color: white;
+        width: 195px;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .topauthor .author-rekomen1 span{
+        font-size: 13px;
+        color: #013880;
+    }
+
+    .publication h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .publication .detail-publication{
+        display: flex;
+        flex-direction: column;
+    }   
+
+    .publication .filter-publication{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .filter-publication .filter{
+        min-width: 200px;
+    }
+
+    .publication .paper{
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+
+    .publication .paper-detail{
+        width: 500px;
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+
+    .topauthor a{
+        color: #013880;
+    }
+
+    #circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%
+    }
+
+    @media (max-width: 1200px) { 
+        .buatheader{
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            justify-content: center !important;
+        }
+
+        .subtopikk{
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            justify-content: center !important; 
+        }
+
+        .detail-topik{
+            grid-template-areas: 
+            'header header datatopik datatopik'
+            'pubjs pubjs pubjs pubjs'
+            'topauthor topauthor topauthor topauthor'
+            'publication publication publication publication';
+        }
+     }
+
+     @media (max-width: 700px){
+        .detail-topik{
+            grid-template-areas: 
+            'header header header header'
+            'datatopik datatopik datatopik datatopik'
+            'pubjs pubjs pubjs pubjs'
+            'topauthor topauthor topauthor topauthor'
+            'publication publication publication publication';
+        }
+     }
+
+     @media (max-width: 850px){
+         .publication .filter-publication{
+             flex-wrap: wrap;
+         }
+         
+         .paper-detail{
+             margin-left: 0 !important;
+         }
+
+         .detail-publication, .paper{
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            justify-content: center !important;
+         }
+     }
+
+</style>
+
 {% endblock %}
 
 {% block content %}
 
 {% load static %}
-<div style="width:100%; height: 180px;">
-    <div class="info-affiliation" style="margin-top:40px; margin-left:65px; width:50%; float:left;">
-        <div class="logo" style="width: 140px; float:left; height: 125px;">
-            <img style="width:111px; height:111px;" src="{% static 'author/img/'|add:'topik'|add:topics.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
-        </div>
-        <div class="info-detail-affiliation" style=" margin-left:20px;">
-            <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ topics.topic_name }} </strong>  </p>
-            <p style="font-size:15px;"> <strong style="font-size: 20px; color:#013880;"> <i class="far fa-newspaper"></i> {{ topics.total_publication }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-quote-left"></i> {{ topics.total_cite }} </strong> Citations &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-user"></i> {{ topics.total_author }} </strong> Authors  </p>
-            {% for subtopik in subtopik %}  
-                <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ subtopik.subtopic_name }} </p>
-            {% endfor %}
-        </div>
-    </div>
 
-    <div class="data-over-time" style="float:left; background-color:white; border-radius:15px; width:42%; height:200px; margin-top:40px; padding:20px;">
-        <P style="color:#013880; font-size:15px;"> <strong> {{ topics.topic_name }} data over time </strong> </P>
-        <div style="width:45%;float:left;">
-            <table style="font-size:12px; text-align:center; margin-left:20px; margin-right:20px; width:100%;">
+<div class="detail-topik">
+    <header>
+        <div class="buatheader" style="display: flex; align-items:center;">
+            <img style="width:130px; height:130px; margin-right: 20px;" src="{% static 'author/img/'|add:'topik'|add:topics.id_topic|add:'.png' %}" style="position: relative;" alt="Logo Afiliasi">
+            <div class="info-topik">
+                <h3>
+                    <strong>{{ topics.topic_name }}</strong>
+                </h3>
+                <p style="margin-bottom: 10px !important;">
+                    <span><i class="far fa-newspaper"></i> {{ topics.total_publication }} </span> Publications &nbsp; &nbsp; <span><i class="fas fa-quote-left"></i> {{ topics.total_cite }} </span> Citations <span> <i class="fas fa-user"></i>  {{ topics.total_author }} </span> Authors
+                </p>
+                <div class="subtopikk" style="display: flex; flex-wrap:wrap;">
+                    {% for subtopik in subtopik %}  
+                    <p class="subtopik" style="margin-bottom: 10px !important; font-size: 12px;"> {{ subtopik.subtopic_name }} </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="datatopik">
+        <h6>
+            <strong> {{ topics.topic_name }} Data Over Time </strong>
+        </h6>
+        <div style="display: flex; background-color:white; border-radius:20px; justify-content:space-around; align-items: center; flex-wrap:wrap; padding:20px;">
+            <table class="text-center">
                 <thead>
                     <tr>
                         <th>
@@ -81,9 +284,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div style="width:45%;  float:left; margin-left:20px;">
-            <table style="font-size:12px; text-align:center; margin-left:20px; margin-right:20px; width:100%;">
+
+            <table class="text-center">
                 <thead>
                     <tr>
                         <th>
@@ -123,206 +325,256 @@
             </table>
         </div>
     </div>
-</div>
-<br><br><br><br><br><br>
-<p style="margin-left:65px; color: #013880; width:40%;"> <strong>Publications & Topics Over Time</strong> </p>
-<div class="visualisasiSVG" class="text-center" style="width:63%; height:540px; margin: 20px; background-color:white; border:1px solid gray; border-radius:20px; float:left;">
-        <div class="filter" style="width:15%; float:left; margin-left:50px; margin-top:50px;">
-            <form action="" method="POST">
-                {% csrf_token %}
-                <p>Filter By Topic: </p>
-            {% for topics in subtopik %}
-            <input type="checkbox" id="{{ topics.id_SubTopic }}" name="id_subtopik" value="{{ topics.id_SubTopic }}">
-            <label for="{{ topics.id_SubTopic }}" style="font-size:12px; margin:0px;"> {{ topics.subtopic_name }}</label><br>
-            {% endfor %}
-            <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">    
-            </form>
-        </div>
-        <div class="svg" style="width:55%; height:500px; float:left;" >
-            <svg overflow='scroll' id='vis' width='1600' height='700' transform='scale(0.45) translate(-900 -200)' z-index='1'>
-                <g>
-                    <g class="axis" transform="translate(0,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2010
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
+    <div class="pubjs">
+        <h6>
+            <strong> Publications & Topics Over Time </strong>
+        </h6>
+        <div style="display: flex; justify-content:space-between; position:relative;">
+            <div class="filter">
+                <form action="/topic/{{ topics.id_topic }}/updatesvg/" method="POST">
+                    {% csrf_token %}
+                    <p>Filter By Subtopic: </p>
+                {% for topics in subtopik %}
+                <input type="checkbox" id="{{ topics.id_SubTopic }}" name="subtopik" value="{{ topics.id_SubTopic }}">
+                <label for="{{ topics.id_SubTopic }}" style="font-size:12px; margin:0px;"> {{ topics.subtopic_name }}</label><br>
+                {% endfor %}
+                <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">    
+                </form>
+            </div>
+            <div style="width: 700px;">
+                <svg overflow='scroll' id='vis' width='1600' height='700' transform='scale(0.45) translate(-1000 -400)' z-index='1'>
+                    <g>
+                        <g class="axis" transform="translate(0,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2010
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(150,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2011
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(300,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2012
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(450,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2013
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(600,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2014
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(750,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2015
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(900,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2016
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(1050,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2017
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(1200,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2018
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(1350,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2019
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+        
+                            </line>
+                        </g>
+                        <g class="axis" transform="translate(1500,0)">
+                            <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
+                                2020
+                            </text>
+                            <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
+        
+                            </line>
+                        </g>
                     </g>
-                    <g class="axis" transform="translate(150,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2011
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
+                    <g>
+                        {% for dat in data %}
+                            <path
+                                d="M {{dat.xAwalAtas}},{{dat.yAwalAtas}} C {{dat.xLengkung1}},{{dat.yLengkung1atas}} {{dat.xLengkung2}},{{dat.yLengkung2atas}} {{dat.xAkhirAtas}},{{dat.yAkhirAtas}} L {{dat.xAkhirBawah}},{{dat.yAkhirBawah}} C {{dat.xLengkung2}},{{dat.yLengkung2bawah}} {{dat.xLengkung1}},{{dat.yLengkung1bawah}} {{dat.xAwalBawah}},{{dat.yAwalBawah}}"
+                                style="stroke-dasharray: 10, 10; stroke: gray; stroke-width: 0; fill-opacity: 0.6; cursor: pointer; fill: {{dat.Color}};"
+                                opacity="1"> </path>
+                            {% endfor %}
                     </g>
-                    <g class="axis" transform="translate(300,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2012
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(450,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2013
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(600,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2014
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(750,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2015
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(900,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2016
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(1050,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2017
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:1;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(1200,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2018
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(1350,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2019
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
-    
-                        </line>
-                    </g>
-                    <g class="axis" transform="translate(1500,0)">
-                        <text x="94.888889" y="15" text-anchor="end" style="font-weight:bold;">
-                            2020
-                        </text>
-                        <line x1="100.88889" y1="25" x2="100.88889" y2="675" style="stroke:lightgray; stroke-width:2;">
-    
-                        </line>
-                    </g>
-                </g>
-                <g>
-                    {% for dat in data %}
-                        <path
-                            d="M {{dat.xAwalAtas}},{{dat.yAwalAtas}} C {{dat.xLengkung1}},{{dat.yLengkung1atas}} {{dat.xLengkung2}},{{dat.yLengkung2atas}} {{dat.xAkhirAtas}},{{dat.yAkhirAtas}} L {{dat.xAkhirBawah}},{{dat.yAkhirBawah}} C {{dat.xLengkung2}},{{dat.yLengkung2bawah}} {{dat.xLengkung1}},{{dat.yLengkung1bawah}} {{dat.xAwalBawah}},{{dat.yAwalBawah}}"
-                            style="stroke-dasharray: 10, 10; stroke: gray; stroke-width: 0; fill-opacity: 0.6; cursor: pointer; fill: {{dat.Color}};"
-                            opacity="1"> </path>
-                        {% endfor %}
-                </g>
-            </svg>
-        </div>
-    </div>
+                </svg>
+            </div>
 
-    <div class="info-per-topik" style="text-align:center;width:28%; float:right;  margin-right:65px; position:relative; top:-40px;">
-        <p style="text-align:left; color: #013880;"> <strong>Top Author</strong> </p>
-        <div class="author-rekomen" style="margin-top: 35px;">
-            <div style="width:100%;">
-                {% for author in author %}
-                <div class="author-rekomen1" style="text-align:center;height:250px; border-radius:20px; width:45%; background-color:white; padding:30px 20px; float:left; margin-right:20px; margin-bottom:20px;">
+            <div style="width: 80%; height: 80px; display: block; position: absolute; top: 60%; left: 50%; transform: translate(-50%, -60%); padding: 20px;">
+                <div style="display: flex; flex-wrap: wrap; justify-content:center">
+                    {% for warna,nama in legend %}
+                        <div style="display: flex; margin: 5px 10px; align-items:center;">
+                            <div id="circle" style="margin-right: 3px; background-color: {{ warna }};"></div>
+                            <p style="color: {{ warna }}">
+                                {{ nama }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="topauthor">
+        <h6 class="text-center">
+            <strong> Top Authors </strong>
+        </h6>
+        <div class="info-author" style="display: flex; flex-wrap:wrap; align-items:center; justify-content:space-evenly">
+            {% for author in author %}
+                <div class="author-rekomen1 text-center" style="margin-bottom: 20px;">
                     <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
-                    <p style="color:#013880; font-size:13px; margin-bottom:5px;"> <strong> {{ author.name }} </strong> </p>
+                    <p>
+                        <span>
+                            <a href="/author/{{ author.nidn }}"> {{ author.name }} </a>
+                        </span>
+                    </p>
                     <p style="font-size:13px; margin-bottom:5px;"> <i class="far fa-newspaper" style="color: #013880;"></i> {{ author.nilai_dominan1 }} Publications </p>
                     <p style="font-size:13px; margin-bottom:5px;"> <i class="fas fa-quote-left" style="color: #013880;"></i> {{ author.citations }} Citations </p>
                     <img style="width:26px; height:26px;" src="{% static 'author/img/'|add:'topik'|add:author.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
                     <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ author.topik_dominan1.topic_name }} </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="publication">
+        <h6>
+            <strong>Publications</strong>
+        </h6>
+        <div class="filter-publication">
+            <div class="filter">
+                <p>Filter By Subtopic: </p>
+                <form action="/topic/{{topics.id_topic}}/" method="POST">
+                    {% csrf_token %}
+                    {% for topik in subtopik %}
+                    <div class="form-check" style="margin-top: 5px; margin-bottom: 5px;">
+                        <input class="form-check-input" name="id_subtopik" type="radio" value="{{topik.no_subTopic}}" id="{{topik.subtopic_name}}">
+                        <label class="form-check-label" for="{{topik.subtopic_name}}" style="font-size: 14px;">
+                            {{topik.subtopic_name}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:15px;">
+                </form>
+            </div>
+            <div class="detail-publication">
+                {% if users.has_other_pages %}
+                <nav aria-label="Page navigation example" style="margin-bottom: 40px;">
+                    <ul class="pagination justify-content-end">
+                        {% if users.has_other_pages %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-end">
+                            {% if users.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                            {% endif %}
                 
+                            
+                            {% for i in users.paginator.page_range %}
+                            {% if users.number == i %}
+                                <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                
+                            {% if users.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
+                            </li>
+                                {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Next</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+
+            <div class="paper">
+                {% for paper in users %}
+                {% load static %}
+                <div class="paper-detail" style="background-color:white; box-shadow: 1px 1px 8px gray; margin-left: 30px;">
+                    <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
+                    <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
+                    <img style="width:27px; height:27px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
                 </div>
                 {% endfor %}
             </div>
+
+            </div>
         </div>
     </div>
-
-<div class="publication-affi" style="margin-left:65px; margin-top:30px; width:95%; float:left;">
-    <p style="color: #013880;"> <strong>Publications</strong> </p>
-    {% if users.has_other_pages %}
-                    <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:60px;">
-                        <ul class="pagination justify-content-end">
-                            {% if users.has_other_pages %}
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-end">
-                                {% if users.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
-                                    </li>
-                                {% else %}
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                {% endif %}
-                    
-                                
-                                {% for i in users.paginator.page_range %}
-                                {% if users.number == i %}
-                                    <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
-                                {% else %}
-                                    <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
-                                {% endif %}
-                                {% endfor %}
-                    
-                                {% if users.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
-                                </li>
-                                    {% else %}
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">Next</a>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                {% endif %}
-    <div class="filter" style="float:left;">
-        Filter By: <br> 
-        <form action="/affiliation/{{univs.id_univ}}" method="GET">
-        {% for topik in subtopik %}
-        <input type="checkbox" id="{{topik.subtopic_name}}" name="id_subtopik" value="{{topik.id_SubTopic}}">
-        <label for="{{topik.subtopic_name}}" style="font-size:12px; margin:0px;">{{topik.subtopic_name}}</label><br>
-        {% endfor %}
-        <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">
-        </form>
-    </div>
-    {% for paper in users %}
-    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:160px; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px; margin-right:60px; margin-bottom: 30px;">
-        <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
-        <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
-        <img style="width:27px; height:27px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.subtopic.subtopic_name }} </p>
-    </div>
-    {% endfor %}
 </div>
 
+<footer id="page-footer" class="bg-white opacity-0" style="opacity: 1;">
+    <div class="content py-20 font-size-xs clearfix">
+        <div class="float-left" style="padding-top: 40px">
+            <div class="info">© 2020 Institut Teknologi Sepuluh Nopember</div>
+        </div>
+        <div class="float-right">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/Logo-its.png 2x, https://my.its.ac.id/assets/media/img/Logo-its.png 1x" src="https://my.its.ac.id/assets/media/img/Logo-its.png" alt="Logo ITS" class="dark-logo mr-2" width="100px">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/logo-ITSsemangatbaru.png 2x, https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png 1x" src="https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png" width="100px" alt="Logo ITS Semangat Baru" class="dark-logo">
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
+
+{% block script %}
 
 
 

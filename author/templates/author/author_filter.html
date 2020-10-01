@@ -1,126 +1,185 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Collaborator</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item" >
-          <a class="nav-link" href="/author" style="background-color: white; color: #013880;">Author</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/topic">Topic</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/affiliation">Affiliation</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+{% block header %}
+
+<style>
+    .daftar-author{
+        margin: 20px;
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .coba{
+        width: 90%;
+        margin: auto;
+    }
+
+    #auth{
+        color: #013880 !important;
+        background-color: #fff !important;
+    }
+
+    @media (max-width: 992px) { 
+        .daftar-author{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .filter{
+            text-align: center;
+        }
+
+        .daftar-author .buatmargin{
+            margin-right: 0 !important;
+        }
+     }
+
+     p{
+         margin: 0 !important;
+         padding: 0 !important;
+     }
+
+     @media (max-width: 695px) { 
+        .justcenter{
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            justify-content: center !important;
+        }
+
+        .justcenter2{
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            justify-content: center !important;
+        }
+     }
+
+</style>
+
 {% endblock %}
 
 {% block content %}
-
 <div class="container" style="width: 100%; margin-top:100px; margin-bottom:50px;">
-  <form action="/author/" class="form-inline justify-content-center" method="post">
-      {% csrf_token %}
-          <input type="text" class="form-control" placeholder="Search Author..." id="author" name="author" style="border-color: #013880; width:94%">
-          <button type="Submit" class="btn btn-primary" style="background-color: #013880; font-family: 'Quicksand', sans-serif; margin-left:15px;">
-              <i class="fas fa-search"></i>
-          </button>
-  </form>
-</div>
-
-<div class="pagination" style="display: flex; justify-content: flex-end; margin-right:50px;">
-  {% if users.has_other_pages %}
-      <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:20px">
-          <ul class="pagination justify-content-end">
-              {% if users.has_other_pages %}
-              <nav aria-label="Page navigation example">
-                  <ul class="pagination justify-content-end">
-                  {% if users.has_previous %}
-                      <li class="page-item">
-                          <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
-                      </li>
-                  {% else %}
-                      <li class="page-item disabled">
-                          <a class="page-link" href="#" tabindex="-1">Previous</a>
-                      </li>
-                  {% endif %}
-      
-                  
-                  {% for i in users.paginator.page_range %}
-                  {% if users.number == i %}
-                      <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
-                  {% else %}
-                      <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
-                  {% endif %}
-                  {% endfor %}
-      
-                  {% if users.has_next %}
-                  <li class="page-item">
-                      <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
-                  </li>
-                      {% else %}
-                  <li class="page-item disabled">
-                      <a class="page-link" href="#">Next</a>
-                      </li>
-                      {% endif %}
-                  </ul>
-              </nav>
-              {% endif %}
-          </ul>
-      </nav>
-  {% endif %}
-</div>
-  
-<div style="width:18%; margin-left:70px; float:left;">
-    Filter By: <br> <br>
-    <form action="/author/" method="GET">
-    {% for topics in topic %}
-    <input type="checkbox" id="{{ topics.id_topic }}" name="id_topik" value="{{ topics.id_topic }}">
-    <label for="{{ topics.id_topic }}"> {{ topics.topic_name }}</label><br>
-    {% endfor %}
-    <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">
+    <form action="/author/" class="form-inline justify-content-center" method="post">
+        {% csrf_token %}
+            <input type="text" class="form-control" placeholder="Search Author..." id="author" name="author" style="border-color: #013880; width:80%; float:left;">
+            <button type="Submit" class="btn btn-primary" style="background-color: #013880; font-family: 'Quicksand', sans-serif; margin-left:15px;">
+                <i class="fas fa-search"></i>
+            </button>
     </form>
+  </div>
+
+  
+  <div class="coba">
+      <div class="pagination" style="display: flex; justify-content:flex-end; margin-right:50px;">
+        {% if users.has_other_pages %}
+            <nav aria-label="Page navigation example" style="margin-bottom: 40px; margin-right:20px">
+                <ul class="pagination justify-content-end">
+                    {% if users.has_other_pages %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                        {% if users.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ users.previous_page_number }}" tabindex="-1" style="color:#013880;">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        {% endif %}
+            
+                        
+                        {% for i in users.paginator.page_range %}
+                        {% if users.number == i %}
+                            <li class="page-item active"><span class="page-link" style="background-color:#013880;">{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a href="?page={{ i }}" class="page-link" style="color:#013880;">{{ i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+            
+                        {% if users.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ users.next_page_number }}" style="color:#013880;">Next</a>
+                        </li>
+                            {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+      </div>
+    <div class="daftar-author" style="display:flex; justify-content: space-between; flex-wrap:wrap;">
+        <div class="filter" style="width: 15%; min-width:150px; margin-bottom: 30px;">
+            Filter By: <br> <br>
+            <form action="/author/" method="GET">
+                {% for topics in topic %}
+                <div class="form-check" style="margin-top: 5px; margin-bottom: 5px;">
+                    <input class="form-check-input" type="radio" id="{{ topics.id_topic }}" name="id_topik" value="{{ topics.id_topic }}">
+                    <label class="form-check-label" for="{{ topics.id_topic }}" style="font-size: 14px;">
+                        {{ topics.topic_name }}
+                    </label>
+                </div>
+                {% endfor %}
+                <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:15px;">
+            </form>
+        </div>
+        {% load static %}
+        <div class="author" style="width:82%; display:flex; flex-wrap:wrap; justify-content:flex-end;">
+            {% for authors in users %}
+            <div class="buatmargin" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 480px; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
+                
+                <div class="justcenter" style="display: flex; justify-content: flex-start; flex-wrap:wrap; align-items:center">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:100px; height:100px; border-radius: 50%;">
+                    <div class="info-detail-author" style="margin-left: 20px;">
+                        <a href="{{ authors.nidn }}" style="color: #013880;">
+                            <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
+                        </a>
+                        <p style="font-size:18px;"> <strong> {{ authors.univ.name }} </strong></p>
+                        <p style="font-size:18px;">nidn  <strong> {{ authors.nidn }} </strong>  h-index <strong> {{ authors.h_index }} </strong> </p>
+                    </div>
+                </div>
+
+
+                <div class="justcenter2" style="display: flex; justify-content:space-between; flex-wrap:wrap">
+                    <div class="logo-topik1" style="display: flex; align-items: center;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
+                    </div>
+                    <div class="logo-topik2" style="display: flex; align-items: center;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan2.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan2 }} Publications</p>
+                    </div>
+                    <div class="logo-topik3" style="display: flex; align-items: center;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan3.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan3 }} Publications</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
-<div style="width:70%; float:right; margin-right:40px;">
-{% load static %}
-{% for authors in users %}
-        <div class="author" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 500px; height:200px; float:left; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
-          <div class="logo-author" style="width: 100px; float:left; height: 100px;">
-            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:100px; height:100px; border-radius: 50%;">
-          </div>
-          <div class="info-detail-author" style=" margin-left:130px;">
-              <a href="{{ authors.nidn }}" style="color: #013880;">
-                  <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
-              </a>
-              <p style="font-size:13px;"> <strong> {{ authors.univ.name }} </strong></p>
-              <p style="font-size:13px;"> <strong> nidn {{ authors.nidn }} i10-index {{ authors.i10_index }} h-index {{ authors.h_index }} </strong> </p>
-          </div>
-          <div class="logo-topik1" style="width: 40px; float:left; height: 40px;">
-            <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-          </div>
-          <div class="nilai-dominan1" style="padding:10px 0; float:left; margin-left:10px; margin-right:15px;">
-              <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
-          </div>
-          <div class="logo-topik2" style="width: 40px; float:left; height: 40px;">
-            <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan2.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-          </div>
-          <div class="nilai-dominan2" style="padding:10px 0; float:left; margin-left:10px; margin-right:15px;">
-              <p style="font-size:13px; color: #013880; float:left;"> {{ authors.nilai_dominan2 }} Publications</p>
-          </div>
-          <div class="logo-topik3" style="width: 40px; float:left; height: 40px;">
-            <img style="width:40px; height:40px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan3.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-          </div>
-          <div class="nilai-dominan3" style="padding:10px 0; float:left; margin-left:10px; margin-right:15px;">
-              <p style="font-size:13px; color: #013880; float:left;"> {{ authors.nilai_dominan3 }} Publications</p>
-          </div>
-        </div>    
-{% endfor %}
+<footer id="page-footer" class="bg-white opacity-0" style="opacity: 1;">
+    <div class="content py-20 font-size-xs clearfix">
+        <div class="float-left" style="padding-top: 40px">
+            <div class="info">© 2020 Institut Teknologi Sepuluh Nopember</div>
+        </div>
+        <div class="float-right">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/Logo-its.png 2x, https://my.its.ac.id/assets/media/img/Logo-its.png 1x" src="https://my.its.ac.id/assets/media/img/Logo-its.png" alt="Logo ITS" class="dark-logo mr-2" width="100px">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/logo-ITSsemangatbaru.png 2x, https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png 1x" src="https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png" width="100px" alt="Logo ITS Semangat Baru" class="dark-logo">
+        </div>
+    </div>
+</footer>
 
 {% endblock %}

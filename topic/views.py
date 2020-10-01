@@ -13,6 +13,11 @@ import warnings
 warnings.filterwarnings("ignore")
 import operator
 
+global warna
+
+warna=['#2d97ab', '#ed164f', '#72801b', '#755e5c', '#e9ce86', '#8851d2', '#ccbd73', '#7acdd3', '#7254da', '#655e2d', '#75377d', '#bea56b'
+, '#e18a39', '#cef397', '#22875c', '#a3c6ae', '#d15ac9', '#7758fb', '#63b9c8', '#fa74b6']
+
 # Create your views here.
 def index(request):
     if request.method == 'GET':
@@ -111,31 +116,125 @@ def index(request):
         return render(request, 'topic/topic.html', {'users': users})
 
 def show_detailtopic(request, *args, **kwargs):
-    topic_id = kwargs['id_topic']
-    topic = Topics.objects.get(id_topic=topic_id)
-    paper = Papers.objects.filter(topic=topic_id)[:20]
+    if request.method == 'GET':
+        topic_id = kwargs['id_topic']
+        topic = Topics.objects.get(id_topic=topic_id)
+        paper = Papers.objects.filter(topic=topic_id)[:20]
 
-    author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
+        author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
+        
+        page = request.GET.get('page', 1)
+        paginator = Paginator(paper, 4)
+
+        try:
+            users = paginator.page(page)
+        except PageNotAnInteger:
+            users = paginator.page(1)
+        except EmptyPage:
+            users = paginator.page(paginator.num_pages)
+
+        subtopik=topic.topik_subtopik.all()
+
+        namatopik = []
+        for i in subtopik:
+            namatopik.append(i.subtopic_name)
+
+        warna_legend = []
+        for i in subtopik:
+            warna_legend.append(warna[int(i.no_subTopic)])
+
+        zipped = zip(warna_legend, namatopik)  
+
+        # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
+        data_akhir=SVG_sub(subtopik.values_list('id_SubTopic'))
+
+        ##sumcount
+        data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
+        return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2, 'legend':zipped})
     
-    page = request.GET.get('page', 1)
-    paginator = Paginator(paper, 4)
+    else:
+        catch = request.POST['id_subtopik']
+        topic_id = kwargs['id_topic']
+        print('ini adalah catch:', len(catch))
 
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
+        topic = Topics.objects.get(id_topic=topic_id)
+        paper = Papers.objects.filter(topic=topic_id, id_subtopic=catch)[:20]
 
-    subtopik=topic.topik_subtopik.all()
-    # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
-    data_akhir=SVG_sub(subtopik.values_list('id_SubTopic'))
+        author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
+        
+        page = request.GET.get('page', 1)
+        paginator = Paginator(paper, 4)
 
-    print(subtopik)
+        try:
+            users = paginator.page(page)
+        except PageNotAnInteger:
+            users = paginator.page(1)
+        except EmptyPage:
+            users = paginator.page(paginator.num_pages)
 
-    ##sumcount
-    data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
-    return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2})
+        subtopik=topic.topik_subtopik.all()
+
+        namatopik = []
+        for i in subtopik:
+            namatopik.append(i.subtopic_name)
+
+        warna_legend = []
+        for i in subtopik:
+            warna_legend.append(warna[int(i.no_subTopic)])
+
+        zipped = zip(warna_legend, namatopik)
+
+        # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
+        data_akhir=SVG_sub(subtopik.values_list('id_SubTopic'))
+
+        
+
+        ##sumcount
+        data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
+        return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2, 'legend':zipped})
+
+def show_detailtopicupdate(request, *args, **kwargs):
+    if request.method=='POST':
+        chk = request.POST.getlist('subtopik')
+
+        print('ini adalah chk', chk)
+
+        topic_id = kwargs['id_topic']
+        topic = Topics.objects.get(id_topic=topic_id)
+        paper = Papers.objects.filter(topic=topic_id)[:20]
+
+        author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
+        
+        page = request.GET.get('page', 1)
+        paginator = Paginator(paper, 4)
+
+        try:
+            users = paginator.page(page)
+        except PageNotAnInteger:
+            users = paginator.page(1)
+        except EmptyPage:
+            users = paginator.page(paginator.num_pages)
+
+        subtop = Subtopics.objects.filter(id_SubTopic__in=chk)
+
+        subtopik=topic.topik_subtopik.all()
+
+        namatopik = []
+        for i in subtop:
+            namatopik.append(i.subtopic_name)
+
+        warna_legend = []
+        for i in subtop:
+            warna_legend.append(warna[int(i.no_subTopic)])
+
+        zipped = zip(warna_legend, namatopik)  
+
+        # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
+        data_akhir=SVG_sub(chk)
+
+        ##sumcount
+        data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
+        return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2, 'legend':zipped})
 
 
 # fungsi svg

@@ -1,72 +1,257 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-<nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="/">Collaborator</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="/author" style="background-color: white; color: #013880;">Author</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/topic">Topic</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/affiliation">Affiliation</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+{% block header %}
+
+<style>
+    .detail-author{
+        margin: 40px;
+        display: grid;
+        grid-template-areas: 
+        'header header fitur'
+        'pubjs pubjs last3years'
+        'publication publication topsimilar';
+        grid-template-columns: 1.2fr 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 20px;
+    }
+
+    @media (max-width: 1200px) { 
+        .detail-author{
+            grid-template-areas: 
+            'header header header header'
+            'fitur fitur fitur fitur'
+            'pubjs pubjs pubjs pubjs'
+            'last3years last3years topsimilar topsimilar'
+            'publication publication publication publication';
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+     }
+
+     @media (max-width: 695px) { 
+        
+     }
+
+     @media (max-width: 1000px) {
+
+        .detail-author{
+            grid-template-areas: 
+            'header'
+            'fitur'
+            'pubjs'
+            'last3years '
+            'topsimilar'
+            'publication';
+            grid-template-columns: 1fr;
+        }
+
+     }
+
+    header{
+        grid-area: header;
+        border: 1px solid black;
+        padding: 20px;
+        /* background-color: green; */
+        
+    }
+
+    .fitur{
+        grid-area: fitur;
+        border: 1px solid black;
+        padding: 20px;
+        /* background-color: green; */   
+    }
+
+    .pubjs{
+        grid-area: pubjs;
+        /* background-color: red; */
+        border: 1px solid black;
+        padding: 20px;
+        min-width: 500px;
+    }
+
+    .last3years{
+        grid-area: last3years;
+        /* background-color: yellow; */
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .publication{
+        grid-area: publication;
+        /* background-color: orange; */
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .topsimilar{
+        grid-area: topsimilar;
+        /* background-color: blue; */
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+
+    p{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .topsimilar h6{
+        color: #013880;
+        margin: 0 !important;
+    }
+
+    .publication h6{
+        color: #013880;
+        margin: 0 !important;
+    }
+
+    .pubjs h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .fitur h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .detail-author .info-author h3{
+        color: #013880;
+        margin: 0 !important;
+    }
+
+    .detail-author .info-author span{
+        font-size: 20px;
+        color: #013880;
+    }
+
+    .info-author a{
+        text-decoration: none;
+        color: inherit;
+        margin-right: 15px;
+        outline-style: solid;
+        outline-color: black;
+        padding: 5px;
+        outline-width: 1px;
+        background-color: #fff;
+    }
+
+    .topsimilar p a{
+        text-decoration: none;
+        color: inherit;
+        margin-right: 15px;
+        outline-style: solid;
+        outline-color: black;
+        padding: 5px;
+        outline-width: 1px;
+        background-color: #fff;
+    }
+
+    .topsimilar h6 a{
+        color: #013880;
+    }
+
+    .author-rekomen{
+        background-color: white;
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .display{
+        display: flex;
+        align-items: center;
+    }
+
+    .publication .filter-publication{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .publication .filter{
+        margin-top: 20px;
+        min-width: 180px;
+    }
+
+    .publication .detail-publication{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: right;
+    }   
+
+    .publication .paper{
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        width: 520px;
+    }
+
+    .last3years h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 20px !important;
+    }
+
+</style>
+
 {% endblock %}
 
 {% block content %}
 
-<div class="info-author" style="margin-top:40px; margin-left:65px; width:100%;">
-    <div class="logo" style="width: 140px; float:left; height: 125px;">
-        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:130px; height:130px; border-radius: 50%;">
-    </div>
-    <div class="info-detail-author" style=" margin-left:150px;">
-        <p style="font-size:24px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
-        <p style="margin-bottom:5px;">
-            {{ author.univ.name }}
-        </p>
-        <p style="font-size:15px; margin-bottom:5px;"> <strong style="font-size: 20px; color:#013880;"> <i class="far fa-newspaper"></i> {{ countpub }} </strong> Publications &nbsp; &nbsp; <strong style="font-size: 20px; color:#013880;"> <i class="fas fa-quote-left"></i> {{ sumcite }} </strong> Citations </p>
-        <a href="/topic/{{ author.topik_dominan1 }}">
-            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
-        </a>
-        <a href="/topic/{{ author.topik_dominan2 }}">
-            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan2.topic_name }} </p>
-        </a>
-        <a href="/topic/{{ author.topik_dominan3 }}">
-            <p style="font-size:15px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan3.topic_name }} </p>
-        </a>
-    </div>
-</div>
-
-<div class="publication-vis" style="margin-left:65px; margin-top:30px; color: #013880; width:60%; float:left; margin-bottom:30px;">
-    <p> <strong>Publications & Topics Over Time</strong> </p>
-        <div class="chart-container content" style="height:100%; width:100%;">
-            <canvas id="mixed-chart"style="background-color: #FFFFFF;  border-radius:30px; padding:30px;"></canvas>
+<div class="detail-author">
+        <header>
+            <div style="display: flex;">
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:130px; height:130px; border-radius: 50%; margin-right: 20px">
+                <div class="info-author">
+                    <h3>
+                        <strong>{{ author.name }}</strong>
+                    </h3>
+                    <p>
+                        {{ author.univ.name }}
+                    </p>
+                    <p>
+                        <span><i class="far fa-newspaper"></i> {{ countpub }} </span> Publications &nbsp; &nbsp; <span><i class="fas fa-quote-left"></i> {{ sumcite }} </span> Citations
+                    </p>
+                    <p style="margin-top: 10px !important;">
+                        <a href="/topic/{{ author.topik_dominan1.id_topic }}">
+                            {{ author.topik_dominan1.topic_name }}
+                        </a>
+                        <a href="/topic/{{ author.topik_dominan2.id_topic }}">
+                            {{ author.topik_dominan2.topic_name }} 
+                        </a>
+                        <a href="/topic/{{ author.topik_dominan3.id_topic }}">
+                            {{ author.topik_dominan3.topic_name }} 
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </header>
+        <div class="pubjs">
+            <h6>
+                <strong> Publications & Topics Over Time </strong>
+            </h6>
+            <canvas id="mixed-chart"style="background-color: #FFFFFF; "></canvas>
         </div>
-</div>
-
-<div class="info-per-topik" style="text-align:center;width:28%; float:right; margin-top:30px; color: #013880; margin-right:65px;">
-    <p style="text-align:left;"> <strong>Last 3 Years</strong> </p>
-    <div style="background-color:white; border-radius:30px; padding:20px;">
-        <div class="topik-author" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan1.topic_name }}</p>
-            <table style="margin-left:20px; margin-right:20px; width:100%;">
-                <thead style="font-size:10px;">
+        <div class="last3years" >
+            <h6>
+                <strong> Publications </strong>
+            </h6>
+            <p>{{ author.topik_dominan1.topic_name }}</p>
+            <table class="text-center" style="width: 100%; margin-right: 0px !important; margin: 20px 0; background-color:white; border-radius:20px;">
+                <thead>
                     <tr>
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
                     </tr>
                 </thead>
-                <tbody style="font-size:10px; text-align:center">
+                <tbody>
                     {% for data in topik1_data %}
                         <tr>
                             <td>{{ data.year }}</td>
@@ -82,18 +267,16 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="topik-2" style="border-radius: 15px; border:1px black solid; width: 100%; margin-bottom:30px;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan2.topic_name }}</p>
-            <table style="margin-left:20px; margin-right:20px; width:100%;">
-                <thead style="font-size:10px;">
+            <p>{{ author.topik_dominan2.topic_name }}</p>
+            <table class="text-center" style="width: 100%; margin-right: 0px !important; margin: 20px 0; background-color:white; border-radius:20px;">
+                <thead>
                     <tr>
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
                     </tr>
                 </thead>
-                <tbody style="font-size:10px; text-align:center">
+                <tbody>
                     {% for data in topik2_data %}
                         <tr>
                             <td>{{ data.year }}</td>
@@ -109,18 +292,16 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="topik-3" style="border-radius: 15px; border:1px black solid; width: 100%;">
-            <p style="color:#013880; text-align:left; margin-left:20px; margin-right:20px; margin-bottom:0px;">{{ author.topik_dominan3.topic_name }}</p>
-            <table style="margin-left:20px; margin-right:20px; width:100%;">
-                <thead style="font-size:10px;">
+            <p>{{ author.topik_dominan3.topic_name }}</p>
+            <table class="text-center" style="width: 100%; margin-right: 0px !important; margin: 20px 0; background-color:white; border-radius:20px;">
+                <thead>
                     <tr>
                         <th>Year</th>
                         <th>Publication</th>
                         <th>Citation</th>
                     </tr>
                 </thead>
-                <tbody style="font-size:10px; text-align:center">
+                <tbody>
                     {% for data in topik3_data %}
                         <tr>
                             <td>{{ data.year }}</td>
@@ -137,36 +318,28 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <p style="text-align:left; margin-top:50px;"> <strong>Top Authors by Similarities</strong> </p>
-    {% load static %}
-    {% for author in rekomen_author %}
-        <div style="background-color:white; border-radius:30px; padding:20px; margin-bottom:20px;">
-            <div class="logo" style="width: 90px; height: 100px;float:left; margin-right:20px;">
-                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:85px; height:85px; border-radius: 50%;">
-            </div>
-            <div class="info-detail-affiliation" style=" margin-left:20px; text-align:left;">
-                <p style="font-size:16px; color: #013880; margin-bottom:5px;"> <strong> {{ author.name }} </strong>  </p>
-                <p style="font-size:13px; margin-bottom:5px; color:black;">Score: {{ author.overall_score }} </p>
-                <p style="font-size: 13px; margin-bottom:5px; color:black;"> {{ author.univ.name }} </p>
-                <br>
-                <a href="/topic/{{ author.topik_dominan1.id_topic }}">
-                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan1.topic_name }} </p>
-                </a>
-                <a href="/topic/{{ author.topik_dominan2.id_topic }}">
-                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan2.topic_name }} </p>
-                </a>
-                <a href="/topic/{{ author.topik_dominan3.id_topic }}">
-                    <p style="font-size:13px; outline-style: solid; outline-color:black; color: #013880; outline-offset:2px; display:inline-block; margin-right:15px; background-color:white; outline-width:1px;"> {{ author.topik_dominan3.topic_name }} </p>
-                </a>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-
-<div class="publication-affi" style="margin-left:65px; margin-top:30px; width:60%;">
-    <p style="color: #013880;"> <strong>Publications</strong> </p>
-    {% if users.has_other_pages %}
+        <div class="publication">
+            <h6>
+                <strong> Publications </strong>
+            </h6>
+            <div class="filter-publication">
+                <div class="filter">
+                    <p>Filter By: </p>
+                    <form action="/author/{{author.nidn}}/" method="POST">
+                    {% csrf_token %}
+                    {% for topik in nama_topik %}
+                    <div class="form-check" style="margin-top: 5px; margin-bottom: 5px;">
+                        <input class="form-check-input" type="radio" id="{{topik.topic_name}}" name="id_topik" value="{{topik.id_topic}}">
+                        <label class="form-check-label" for="{{topik.topic_name}}" style="font-size: 14px;">
+                            {{topik.topic_name}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:15px;">
+                    </form>
+                </div>
+                <div class="detail-publication">
+                    {% if users.has_other_pages %}
                     <nav aria-label="Page navigation example" style="margin-bottom: 40px;">
                         <ul class="pagination justify-content-end">
                             {% if users.has_other_pages %}
@@ -206,34 +379,94 @@
                         </ul>
                     </nav>
                 {% endif %}
-    <div class="filter" style="float:left;">
-        Filter By: <br> 
-        <form action="/affiliation/{{univs.id_univ}}" method="GET">
-        {% for topik in nama_topik %}
-        <input type="checkbox" id="{{topik.topic_name}}" name="id_topik" value="{{topik.id_topic}}">
-        <label for="{{topik.topic_name}}" style="font-size:12px; margin:0px;">{{topik.topic_name}}</label><br>
-        {% endfor %}
-        <input type="submit" value="Update" id="selection-button" style="background-color: #013880; color:white; border:none; font-size:12px;">
-        </form>
-    </div>
-    {% for paper in users %}
-    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray; width: 500px; height:auto; float:right; margin-bottom:20px; padding-left:20px; padding-right:20px;">
-        <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
-        <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
-        <img style="width:27px; height:27px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
-        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
-    </div>
-    {% endfor %}
+                {% for paper in users %}
+                    {% load static %}
+                    <div class="paper" style="background-color:white; box-shadow: 1px 1px 8px gray;">
+                        <p style="margin-top: 15px; font-size:15px; color: #013880; margin-bottom:0px;"> <strong> {{ paper.title }} </strong> </p>
+                        <p style="margin-bottom:5px; font-size:12px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
+                        <img style="width:27px; height:27px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                        <p style="font-size:12px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="topsimilar">
+                <h6>
+                    <strong> Top Authors by Similarities </strong>
+                </h6>
+                {% load static %}
+                {% for author in rekomen_author %}
+                <div class="author-rekomen">
+                    <div class="display">
+                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:85px; height:85px; border-radius: 50%; margin-right: 20px">
+                        <div class="info-author-rekomen">
+                            <h6>
+                                <a href="/author/{{author.nidn}}"> {{ author.name }} </a>
+                            </h6>
+                            <p>
+                                Score: {{ author.overall_score }}
+                            </p>
+                            <p>
+                                {{ author.univ.name }}
+                            </p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px !important; font-size: 12px;">
+                        <a href="/topic/{{ author.topik_dominan1.id_topic }}">
+                            {{ author.topik_dominan1.topic_name }}
+                        </a>
+                        <a href="/topic/{{ author.topik_dominan2.id_topic }}">
+                            {{ author.topik_dominan2.topic_name }} 
+                        </a>
+                        <a href="/topic/{{ author.topik_dominan3.id_topic }}">
+                            {{ author.topik_dominan3.topic_name }} 
+                        </a>
+                    </p>
+                </div>
+                {% endfor %}
+        </div>
+
+        <div class="fitur">
+            <h6>
+                <strong>Score</strong>
+            </h6>
+            <div style="display: flex; justify-content: space-around;">
+
+                    <div style="margin-bottom: 10px !important;" class="text-center">
+                        <p> <strong> Topic Exploration </strong></p>
+                        <p> {{ score_exploration }} </p>
+                    </div>
+
+                    <div class="text-center">
+                        <p> <strong> Topic Consistency </strong></p>
+                        <p> {{ score_consistency }} </p>
+                    </div>
+            </div>
+        </div>
+        
 </div>
 
-
+<footer id="page-footer" class="bg-white opacity-0" style="opacity: 1;">
+    <div class="content py-20 font-size-xs clearfix">
+        <div class="float-left" style="padding-top: 40px">
+            <div class="info">© 2020 Institut Teknologi Sepuluh Nopember</div>
+        </div>
+        <div class="float-right">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/Logo-its.png 2x, https://my.its.ac.id/assets/media/img/Logo-its.png 1x" src="https://my.its.ac.id/assets/media/img/Logo-its.png" alt="Logo ITS" class="dark-logo mr-2" width="100px">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/logo-ITSsemangatbaru.png 2x, https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png 1x" src="https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png" width="100px" alt="Logo ITS Semangat Baru" class="dark-logo">
+        </div>
+    </div>
+</footer>
 {% endblock %}
 
 {% block script %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js" integrity="sha512-vBmx0N/uQOXznm/Nbkp7h0P1RfLSj0HQrFSzV8m7rOGyj30fYAOKHYvCNez+yM8IrfnW0TCodDEjRqf6fodf/Q==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+
 <script>
     {% comment %} new Chart(document.getElementById("doughnut-chart"), {
         type: 'pie',
@@ -269,6 +502,7 @@
         }
         }
     }); {% endcomment %}
+
     new Chart(document.getElementById("mixed-chart"), {
     type: 'bar',
     data: {

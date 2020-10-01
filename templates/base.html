@@ -8,43 +8,74 @@
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-156454913-1"></script>
     <link rel="icon" type="image/png" sizes="192x192" href="https://my.its.ac.id/assets/media/favicons/favicon-web.png">
     <!-- Font Google Quicksand -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <title>MyITS Collaborator</title>
+    <link rel="stylesheet" id="css-main" href="https://my.its.ac.id/assets/css/codebase.css">
+  
     <script src="https://d3js.org/d3.v4.js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-156454913-1');
-    </script>
     {% block header %}{% endblock %}
     <style>
+      body{
+          font-family: 'Quicksand', sans-serif;
+          background-color: #F2F5F5;
+      }
+
+      .navbar{
+        background-color: #013880;
+        padding: 10px 100px;
+      }
+
+      .nav-item:hover, .navbar-brand:hover{
+        background-color: #fff !important;
+        color: #013880 !important;
+      }
+
+      .nav-link{
+        padding-right: 20px !important;
+        padding-left: 20px !important;
+        width: 120px;
+        text-align: center;
+      }
+
+      @media (max-width:900px){
         .navbar{
-            background-color: #013880;
+          padding: 10px 70px;
         }
+      }
 
-        .navbar-brand{
-            color:white;
-            margin-left:50px;
+      @media (max-width:700px){
+        .navbar{
+          padding: 10px 30px;
         }
+      }
 
-        .nav-link{
-            color:white;
-            margin-right:50px;
-        }
+      footer{
+        margin-top: 30px !important;
+      }
 
-        body{
-            background-color: #F2F5F5;
-            font-family: 'Quicksand', sans-serif;
-        }
+      #selection-button{
+        margin-top: 10px;
+      }
 
     </style>
 </head>
 <body>      
-      {% block navbar %}
-      
-      {% endblock %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="/">Collaborator</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ml-auto">
+          <a class="nav-item nav-link" id="affi" href="/affiliation">Affiliation</a>
+          <a class="nav-item nav-link" id="auth" href="/author">Author</a>
+          <a class="nav-item nav-link" id='top' href="/topic">Topic</a>
+        </div>
+      </div>
+    </nav>
+
+
 
       {% block content %}
       
@@ -57,11 +88,13 @@
       {% block script %}
       
       {% endblock %}
+
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
       <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+      
 </body>
 </html>
