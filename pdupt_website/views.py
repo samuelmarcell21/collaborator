@@ -597,10 +597,10 @@ def getData_sumcount_topik(top):
 
 def rekomendasi(input):
     data = [input]
-    id2word = Dictionary.load('pdupt_responsive/id2word_new.dict')
-    corpus = MmCorpus('pdupt_responsive/corpus_new.mm')
-    df = pd.read_csv('pdupt_responsive/reduksifix.csv')
-    with open("pdupt_responsive/lemma_new.txt", "rb") as fp:   #Pickling
+    id2word = Dictionary.load('pdupt_website/id2word_new.dict')
+    corpus = MmCorpus('pdupt_website/corpus_new.mm')
+    df = pd.read_csv('pdupt_website/reduksifix.csv')
+    with open("pdupt_website/lemma_new.txt", "rb") as fp:   #Pickling
         data_lemmatized=pickle.load(fp)
     stop_words = stopwords.words('indonesian')
     stop_words2 = stopwords.words('english')
@@ -670,7 +670,7 @@ def rekomendasi(input):
             data_lemmatized_search[x][y] = stemmer.stem(data_lemmatized_search[x][y])
 
             # import gensim
-    model = gensim.models.ldamodel.LdaModel.load('pdupt_responsive/mallet_18_lda.mdl', mmap='r') 
+    model = gensim.models.ldamodel.LdaModel.load('pdupt_website/mallet_18_lda.mdl', mmap='r') 
     new_doc_bow = id2word.doc2bow(data_lemmatized_search[0])
     hasil = model.get_document_topics(new_doc_bow)
 

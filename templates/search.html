@@ -60,12 +60,12 @@
             <strong> Author Recommendation </strong>
         </p>
         {% for authors in author %}
-        <div class="author" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 500px; height:200px; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
+        <div class="author" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 500px; height: 220px; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
             <div class="logo-author" style="width: 100px; float:left; height: 100px;">
               <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:100px; height:100px; border-radius: 50%;">
             </div>
             <div class="info-detail-author" style=" margin-left:130px;">
-                <a href="{{ authors.nidn }}" style="color: #013880;">
+                <a href="/author/{{ authors.nidn }}" style="color: #013880;">
                     <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
                 </a>
                 <p style="font-size:13px;"> <strong> {{ authors.univ.name }} </strong></p>
