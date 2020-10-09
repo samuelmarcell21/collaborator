@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from author.models import Authors, Papers, Svg_top,Data_sumcount_author
-from topic.models import Topics,Data_sumcount_topic, Dyna_prod
+from author.models import Authors, Papers, Svg_top,Data_sumcount_author, Dyna_prod
+from topic.models import Topics,Data_sumcount_topic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Sum
 from django.views.generic import View
@@ -14,14 +14,18 @@ import warnings
 warnings.filterwarnings("ignore")
 import operator
 
-# Create your views here.
 def index(request):
+    # Request GET untuk memfilter berdasarkan topik
     if request.method == 'GET':
         chk = request.GET.getlist('id_topik')
         if len(chk) > 0:
-            result = Authors.objects.filter(topik_dominan1=chk[0]).order_by('-nilai_dominan1')[:100]
+            # Mengambil data author berdasarkan topik yang direquest dan diurutkan berdasarkan jumlah sitasi
+            result = Authors.objects.filter(topik_dominan1=chk[0]).order_by('-citations')[:100]
+
+            # Mengambil topic untuk dijadikan filter
             topic = Topics.objects.all().order_by('topic_name')
-            # print(result)
+
+            # Pagination
             page = request.GET.get('page', 1)
             paginator = Paginator(result, 20)
 
@@ -35,9 +39,13 @@ def index(request):
             return render(request, 'author/author_filter.html', {'users': users, 'topic': topic, 'chk': chk[0]})
 
         else:
+            # Mengambil data seluruh author dan diurutkan berdasarkan sitasi
             result = Authors.objects.all().order_by('-citations')[:100]
+            
+            # Mengambil topic untuk dijadikan filter
             topic = Topics.objects.all().order_by('topic_name')
-            # print(result)
+
+            # Pagination
             page = request.GET.get('page', 1)
             paginator = Paginator(result, 20)
 
@@ -50,11 +58,18 @@ def index(request):
 
             return render(request, 'author/author.html', {'users': users, 'topic': topic})
 
+    # Request POST untuk fitur search author
     elif request.method == 'POST':
+        # Catch untuk mengambil data yang diinput oleh user, dalam hal ini adalah author yang ingin dicari namanya
         catch = request.POST['author']
+        
+        # Menampilkan author yang sesuai dengan hasil search
         result = Authors.objects.filter(name__icontains=catch)[:100]
+
+        # Mengambil topic untuk dijadikan filter
         topic = Topics.objects.all().order_by('topic_name')
 
+        # Pagination
         page = request.GET.get('page', 1)
         paginator = Paginator(result, 20)
 
@@ -69,84 +84,251 @@ def index(request):
 
 def show_detailauthor(request, *args, **kwargs):
     if request.method == 'GET':
-        nidn_author = kwargs['nidn']
-        author = Authors.objects.get(nidn=nidn_author)
-        paper_author = author.paper
-        # topic_paper = Papers.objects.filter(author=nidn_author).values('topic').distinct()
-        topik = []
-        for i in author.paper.values('topic').distinct():
-            topik.append(i['topic'])
-        # print(topik)
-        nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
+        # Untuk mengecek apakah user memasukkan filter fitur top author by similarities
+        chk = request.GET.getlist('feature_filter')
+        # Jika tidak ada filter
+        if len(chk) == 0:
+            # Mengambil nidn dari URL
+            nidn_author = kwargs['nidn']
+            # Mengambil data author dari nidn tersebut
+            author = Authors.objects.get(nidn=nidn_author)
 
-        paper = paper_author.filter(author=nidn_author)[:25]
+            paper_author = author.paper
 
-        page = request.GET.get('page', 1)
-        paginator = Paginator(paper, 5)
+            # Mengambil topik-topik author berdasarkan paper yang dipublikasikan author tersebut
+            topik = []
+            for i in author.paper.values('topic').distinct():
+                topik.append(i['topic'])
 
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
+            # Mengambil data topik dari author tersebut
+            nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
-        sumcite = paper.aggregate(Sum('cite'))
-        df_countsum,list_count,list_sum=vis_author(nidn_author)
+            # Mengambil data paper dari author tersebut
+            paper = paper_author.filter(author=nidn_author)[:25]
 
-        topik1_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan1_id, nidn = nidn_author)
-        topik2_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan2_id, nidn = nidn_author)
-        topik3_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan3_id, nidn = nidn_author)
+            # Pagination
+            page = request.GET.get('page', 1)
+            paginator = Paginator(paper, 5)
 
-        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        # topik_sumcount=[author.topik_dominan1_id,author.topik_dominan2_id,author.topik_dominan3_id]  
-        # data_sumcount=sortData_sumcount_author(df_countsum,nidn_author)
-        # data_sumcount=data_sumcount.to_dict('records')
+            try:
+                users = paginator.page(page)
+            except PageNotAnInteger:
+                users = paginator.page(1)
+            except EmptyPage:
+                users = paginator.page(paginator.num_pages)
 
-        topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
-        topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
-        topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
+            sumcite = paper.aggregate(Sum('cite'))
+            # Mengambil data author untuk visualisasi chart JS
+            df_countsum,list_count,list_sum=vis_author(nidn_author)
 
-        # print(author.consistency_w1, author.consistency_w2, author.consistency_w3)
+            # Mengambil data jumlah sitasi dan publikasi dari 3 topik dominan author
+            topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
+            topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
+            topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
 
-        score_consistency = (author.consistency_w1 + author.consistency_w2 + author.consistency_w3)/3
-        score_exploration = (author.exploration_w1 + author.exploration_w2 + author.exploration_w3)/3
+            # Mengambil rata-rata score Consistency dan Exploration dari Author
+            score_consistency = (author.consistency_w1 + author.consistency_w2 + author.consistency_w3)/3
+            score_exploration = (author.exploration_w1 + author.exploration_w2 + author.exploration_w3)/3
 
-        consistency = ""
-        exploration = ""
+            consistency = ""
+            exploration = ""
 
-        if (score_consistency > 1.171772):
-            consistency = 'High'
+            # Mengecek apakah low dan high berdasarkan mean dari fitur Consistency
+            if (score_consistency > 1.171772):
+                consistency = 'High'
+            else:
+                consistency = 'Low'
+
+            # Mengecek apakah low dan high berdasarkan mean dari fitur Exploration
+            if (score_exploration > 1.110859):
+                exploration = 'High'
+            else:
+                exploration = 'Low'
+
+            filter = ""
+
+            rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
+
+            return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+            'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
+            , 'filter': filter})
+        
         else:
-            consistency = 'Low'
+            # Jika ada filter f2rep
+            if chk[0] == 'f2rep':
+                # Mengambil nidn dari URL
+                nidn_author = kwargs['nidn']
+                # Mengambil data author dari nidn tersebut
+                author = Authors.objects.get(nidn=nidn_author)
 
-        if (score_exploration > 1.110859):
-            exploration = 'High'
-        else:
-            exploration = 'Low'
+                paper_author = author.paper
 
-        rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
+                # Mengambil topik-topik author berdasarkan paper yang dipublikasikan author tersebut
+                topik = []
+                for i in author.paper.values('topic').distinct():
+                    topik.append(i['topic'])
 
-        # print(data_sumcount)
-        return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
-        'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
-        , 'dyna_prod1': topik1_dynaprod, 'dyna_prod2': topik2_dynaprod, 'dyna_prod3': topik3_dynaprod})
+                # Mengambil data topik dari author tersebut
+                nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
+                # Mengambil data paper dari author tersebut
+                paper = paper_author.filter(author=nidn_author)[:25]
+
+                # Pagination
+                page = request.GET.get('page', 1)
+                paginator = Paginator(paper, 5)
+
+                try:
+                    users = paginator.page(page)
+                except PageNotAnInteger:
+                    users = paginator.page(1)
+                except EmptyPage:
+                    users = paginator.page(paginator.num_pages) 
+
+                sumcite = paper.aggregate(Sum('cite'))
+                # Mengambil data author untuk visualisasi chart JS
+                df_countsum,list_count,list_sum=vis_author(nidn_author)
+
+                # Mengambil data jumlah sitasi dan publikasi dari 3 topik dominan author
+                topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
+                topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
+                topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
+
+                # Mengambil rata-rata score Consistency dan Exploration dari Author
+                score_consistency = (author.consistency_w1 + author.consistency_w2 + author.consistency_w3)/3
+                score_exploration = (author.exploration_w1 + author.exploration_w2 + author.exploration_w3)/3
+
+                consistency = ""
+                exploration = ""
+
+                # Mengecek apakah low dan high berdasarkan mean dari fitur Consistency
+                if (score_consistency > 1.171772):
+                    consistency = 'High'
+                else:
+                    consistency = 'Low'
+
+                # Mengecek apakah low dan high berdasarkan mean dari fitur Exploration
+                if (score_exploration > 1.110859):
+                    exploration = 'High'
+                else:
+                    exploration = 'Low'
+                
+                # Mengambil data nidn author yang difilter berdasarkan f2rep
+                dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan1_id).order_by('F2rep')[:4]
+                
+                # Memasukkan hasil nidn tersebut ke array baru
+                nidn_author = []
+                for i in dynaprod:
+                    nidn_author.append(i.nidn)
+
+                filter = 'F2rep'
+
+                # Variabel rekomen_author digantikan berdasarkan hasil filter
+                rekomen_author = Authors.objects.filter(nidn__in=nidn_author)
+
+                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+                'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
+                , 'filter': filter})
+            
+            # Jika ada filter f3sum
+            else:
+                # Mengambil nidn dari URL
+                nidn_author = kwargs['nidn']
+                # Mengambil data author dari nidn tersebut
+                author = Authors.objects.get(nidn=nidn_author)
+
+                paper_author = author.paper
+
+                # Mengambil topik-topik author berdasarkan paper yang dipublikasikan author tersebut
+                topik = []
+                for i in author.paper.values('topic').distinct():
+                    topik.append(i['topic'])
+
+                # Mengambil data topik dari author tersebut
+                nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
+
+                # Mengambil data paper dari author tersebut
+                paper = paper_author.filter(author=nidn_author)[:25]
+
+                # Pagination
+                page = request.GET.get('page', 1)
+                paginator = Paginator(paper, 5)
+
+                try:
+                    users = paginator.page(page)
+                except PageNotAnInteger:
+                    users = paginator.page(1)
+                except EmptyPage:
+                    users = paginator.page(paginator.num_pages)
+
+                sumcite = paper.aggregate(Sum('cite'))
+                # Mengambil data author untuk visualisasi chart JS
+                df_countsum,list_count,list_sum=vis_author(nidn_author)
+
+                # Mengambil data jumlah sitasi dan publikasi dari 3 topik dominan author
+                topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
+                topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
+                topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
+
+                # Mengambil rata-rata score Consistency dan Exploration dari Author
+                score_consistency = (author.consistency_w1 + author.consistency_w2 + author.consistency_w3)/3
+                score_exploration = (author.exploration_w1 + author.exploration_w2 + author.exploration_w3)/3
+
+                consistency = ""
+                exploration = ""
+
+                # Mengecek apakah low dan high berdasarkan mean dari fitur Consistency
+                if (score_consistency > 1.171772):
+                    consistency = 'High'
+                else:
+                    consistency = 'Low'
+
+                # Mengecek apakah low dan high berdasarkan mean dari fitur Exploration
+                if (score_exploration > 1.110859):
+                    exploration = 'High'
+                else:
+                    exploration = 'Low'
+                
+                # Mengambil data nidn author yang difilter berdasarkan f2rep
+                dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan1_id).order_by('-F3sum')[:4]
+                
+                # Memasukkan hasil nidn tersebut ke array baru
+                nidn_author = []
+                for i in dynaprod:
+                    nidn_author.append(i.nidn)
+
+                filter = 'F3sum'
+
+                # Variabel rekomen_author digantikan berdasarkan hasil filter
+                rekomen_author = Authors.objects.filter(nidn__in=nidn_author)
+
+                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+                'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
+                , 'filter': filter})
+
+    # Jika ada request POST tentang filter topik terhadap paper
     else:
+        # Mengambil id_topik yang diinginkan filter
         catch = request.POST['id_topik']
-        print(catch)
+        # Mengambil nidn dari URL
         nidn_author = kwargs['nidn']
+        # Mengambil data author dari nidn tersebut
         author = Authors.objects.get(nidn=nidn_author)
+
         paper_author = author.paper
-        # topic_paper = Papers.objects.filter(author=nidn_author).values('topic').distinct()
+
+        # Mengambil topik-topik author berdasarkan paper yang dipublikasikan author tersebut
         topik = []
         for i in author.paper.values('topic').distinct():
             topik.append(i['topic'])
-        # print(topik)
+        
+        # Mengambil data topik dari author tersebut
         nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
+        # Mengambil data paper dari author tersebut
         paper = paper_author.filter(author=nidn_author, topic=catch)[:25]
 
+        # Pagination
         page = request.GET.get('page', 1)
         paginator = Paginator(paper, 5)
 
@@ -158,45 +340,41 @@ def show_detailauthor(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
 
         sumcite = paper.aggregate(Sum('cite'))
+        # Mengambil data author untuk visualisasi chart JS
         df_countsum,list_count,list_sum=vis_author(nidn_author)
 
-        topik1_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan1_id, nidn = nidn_author)
-        topik2_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan2_id, nidn = nidn_author)
-        topik3_dynaprod = Dyna_prod.objects.filter(id_topic=author.topik_dominan3_id, nidn = nidn_author)
-
-        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        # topik_sumcount=[author.topik_dominan1_id,author.topik_dominan2_id,author.topik_dominan3_id]  
-        # data_sumcount=sortData_sumcount_author(df_countsum,nidn_author)
-        # data_sumcount=data_sumcount.to_dict('records')
-
+        # Mengambil data jumlah sitasi dan publikasi dari 3 topik dominan author
         topik1_data = getData_sumcount_Author(nidn_author,author.topik_dominan1_id)
         topik2_data = getData_sumcount_Author(nidn_author,author.topik_dominan2_id)
         topik3_data = getData_sumcount_Author(nidn_author,author.topik_dominan3_id)
 
-        # print(author.consistency_w1, author.consistency_w2, author.consistency_w3)
-
+        # Mengambil rata-rata score Consistency dan Exploration dari Author
         score_consistency = (author.consistency_w1 + author.consistency_w2 + author.consistency_w3)/3
         score_exploration = (author.exploration_w1 + author.exploration_w2 + author.exploration_w3)/3
 
         consistency = ""
         exploration = ""
 
+        # Mengecek apakah low dan high berdasarkan mean dari fitur Consistency
         if (score_consistency > 1.171772):
             consistency = 'High'
         else:
             consistency = 'Low'
 
+        # Mengecek apakah low dan high berdasarkan mean dari fitur Exploration
         if (score_exploration > 1.110859):
             exploration = 'High'
         else:
             exploration = 'Low'
 
+        filter = ""
+
+        # Variabel rekomen_author berdasarkan topik dominan 1 author terkait
         rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
 
-        # print(data_sumcount)
         return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
         'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
-        , 'dyna_prod1': topik1_dynaprod, 'dyna_prod2': topik2_dynaprod, 'dyna_prod3': topik3_dynaprod})
+        , 'filter': filter})
 
 # fungsi svg
 #fungsi scaling kolom batas atas

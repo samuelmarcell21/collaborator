@@ -9,10 +9,15 @@ from django.db.models import Sum
 
 # Create your views here.
 def index(request):
+    # Untuk Request Get
     if request.method == 'GET':
+        # Mengambil data sort dari Request User
         chk = request.GET.getlist('sort')
+        # Jika ada request get dengan mempassing data maka akan masuk kesini
         if len(chk) > 0:
+            # Sort A-Z
             if chk[0]=='sortaz':
+                # Mengambil 11 univ saja dengan publikasi tertinggi
                 univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
                 result = Affiliations.objects.filter(name__in=univ_list).order_by('name')
                 page = request.GET.get('page', 1)
@@ -26,8 +31,9 @@ def index(request):
                     users = paginator.page(paginator.num_pages)
 
                 return render(request, 'affiliation/affiliation_filter.html', {'users':users, 'chk':chk[0]})
-
+            # Sort Publications
             elif chk[0]=='sortpublications':
+                # Mengambil 11 univ saja dengan publikasi tertinggi
                 univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
                 result = Affiliations.objects.filter(name__in=univ_list).order_by('-total_publication')
                 page = request.GET.get('page', 1)
@@ -41,8 +47,9 @@ def index(request):
                     users = paginator.page(paginator.num_pages)
 
                 return render(request, 'affiliation/affiliation_filter.html', {'users':users, 'chk':chk[0]})
-            
+            # Sort Citations
             elif chk[0]=='sortcitations':
+                # Mengambil 11 univ saja dengan publikasi tertinggi
                 univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
                 result = Affiliations.objects.filter(name__in=univ_list).order_by('-total_cite')
                 page = request.GET.get('page', 1)
@@ -57,7 +64,9 @@ def index(request):
 
                 return render(request, 'affiliation/affiliation_filter.html', {'users':users, 'chk':chk[0]})
 
+            # Sort Authors
             elif chk[0]=='sortauthors':
+                # Mengambil 11 univ saja dengan publikasi tertinggi
                 univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
                 result = Affiliations.objects.filter(name__in=univ_list).order_by('-total_author')
                 page = request.GET.get('page', 1)
@@ -73,6 +82,7 @@ def index(request):
                 return render(request, 'affiliation/affiliation_filter.html', {'users':users, 'chk':chk[0]})
 
         else:
+            # Mengambil 11 univ saja dengan publikasi tertinggi
             univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
             result = Affiliations.objects.filter(name__in=univ_list).order_by('-total_publication')
             page = request.GET.get('page', 1)
@@ -88,10 +98,11 @@ def index(request):
 
             return render(request, 'affiliation/affiliation.html', {'users':users})
 
+    # Ini untuk fitur search
     elif request.method == 'POST':
-
+        # Mengambil data yang dipassing dalam metode POST
         catch = request.POST['affiliation']
-
+        # Mengambil 11 univ saja dengan publikasi tertinggi
         univ_list = ['Institut Pertanian Bogor', 'Institut Teknologi Bandung', 'Institut Teknologi Sepuluh Nopember', 'Universitas Airlangga', 'Universitas Diponegoro', 'Unviersitas Gadjah Mada', 'Universitas Hasanuddin', 'Universitas Indonesia', 'Universitas Padjajaran', 'Universitas Pendidikan Indonesia', 'Universitas Sumatera Utara']
         result = Affiliations.objects.filter(name__in=univ_list).filter(name__icontains=catch)
         page = request.GET.get('page', 1)
@@ -108,29 +119,26 @@ def index(request):
         return render(request, 'affiliation/affiliation.html', {'users':users})
 
 def show_detailaffiliation(request, *args, **kwargs):
+    # Mengambil id topik yang dipassing dari halaman afiliasi
     chk = request.GET.getlist('id_topik')
     if len(chk) > 0:
         id_univ = kwargs['id_univ']
+        # Mengambil data univ dengan topik tersebut
         univ = Affiliations.objects.get(id_univ=id_univ)
+        # Mengambil data author yang bekerja pada afiliasi terkait
         nidn = Authors.objects.filter(univ=id_univ).values('nidn').distinct()
+        # Mengambil seluruh data topik agar dapat digunakan untuk filter
         topic = Topics.objects.all().order_by('topic_name')
+        # Memasukkan hasil nidn ke array baru
         nidn_fix = []
         for i in nidn:
             nidn_fix.append(i['nidn'])
+        # Mengambil data paper dari nidn yang didapatkan dan dibataskan hanya 25 paper
         paper = Papers.objects.filter(author__in=nidn_fix, topic=chk[0])[:25]
-        # topik_affi = Papers.objects.filter(author__in=nidn_fix).value('topic').distinct()
-        # topik = []
-        # for i in topik_affi:
-        #     topik.append(i['topic'])
-
-        # topik_affiliation = Topics.objects.filter(id_topic__in=topik).order_by('-total_publication')[:6]
-
-        # print(topik)
-
-        # models.Shop.objects.order_by().values('city').distinct()
         page = request.GET.get('page', 1)
         paginator = Paginator(paper, 5)
 
+        # Pagination
         try:
             users = paginator.page(page)
         except PageNotAnInteger:
@@ -138,27 +146,28 @@ def show_detailaffiliation(request, *args, **kwargs):
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
-        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        # topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
-        # data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
-        # data_sumcount=data_sumcount.to_dict('records')
-        # print(data_sumcount)
+
         return render(request, 'affiliation/detail_affiliation_filter.html', {'univs': univ, 'users': users,'data_count':list_count,
-        'data_sum':list_sum, 'nama_topik': topic, 'chk':chk[0],'data_sumcount':data_sumcount})
+        'data_sum':list_sum, 'nama_topik': topic, 'chk':chk[0]})
     
     else:
         id_univ = kwargs['id_univ']
+        # Mengambil data univ dengan topik tersebut
         univ = Affiliations.objects.get(id_univ=id_univ)
+        # Mengambil data author yang bekerja pada afiliasi terkait
         nidn = Authors.objects.filter(univ=id_univ).values('nidn').distinct()
+        # Mengambil seluruh data topik agar dapat digunakan untuk filter
         topic = Topics.objects.all().order_by('topic_name')
+        # Memasukkan hasil nidn ke array baru
         nidn_fix = []
         for i in nidn:
             nidn_fix.append(i['nidn'])
+        # Mengambil data paper dari nidn yang didapatkan dan dibataskan hanya 25 paper
         paper = Papers.objects.filter(author__in=nidn_fix)[:25]
-        # models.Shop.objects.order_by().values('city').distinct()
         page = request.GET.get('page', 1)
         paginator = Paginator(paper, 5)
 
+        # Pagination
         try:
             users = paginator.page(page)
         except PageNotAnInteger:
@@ -167,18 +176,13 @@ def show_detailaffiliation(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
         df_countsum,list_count,list_sum=vis_affil(id_univ)
 
-        ##data sum count, udah urut dari topik dominan sampai ke topik yang ga dominan, data yang ditampilkan data pertahun yang ada nilainya aja
-        # topik_sumcount=[univ.topik_dominan1_id,univ.topik_dominan2_id,univ.topik_dominan3_id]  
-        # data_sumcount=sortData_sumcount_univ(df_countsum,id_univ)
-        # data_sumcount=data_sumcount.to_dict('records')
+        # Mengambil data topik dari 3 topik dominan afiliasi
         topik1_data = getData_sumcount_univ(id_univ,univ.topik_dominan1_id)
         topik2_data = getData_sumcount_univ(id_univ,univ.topik_dominan2_id)
         topik3_data = getData_sumcount_univ(id_univ,univ.topik_dominan3_id)
 
-        # print(data_sumcount)
-
+        # Mengambil data rekomendasi author dari 3 topik dominan afiliasi
         author_rekomen1 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan1_id).order_by('-nilai_dominan1')[:2]
-        # print(author_rekomen1)
         author_rekomen2 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan2_id).order_by('-nilai_dominan1')[:2]
         author_rekomen3 = Authors.objects.filter(univ=id_univ, topik_dominan1=univ.topik_dominan3_id).order_by('-nilai_dominan1')[:2]
 

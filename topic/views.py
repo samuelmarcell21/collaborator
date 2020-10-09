@@ -20,13 +20,18 @@ warna=['#2d97ab', '#ed164f', '#72801b', '#755e5c', '#e9ce86', '#8851d2', '#ccbd7
 
 # Create your views here.
 def index(request):
+    # Untuk mengurus sort hasil data topik
     if request.method == 'GET':
-
+        # Mengambil value sort
         chk = request.GET.getlist('sort')
+        # Jika ada sort maka masuk ke dalam if ini
         if len(chk) > 0:
+            # Sort berdasarkan A-Z
             if chk[0]=='sortaz':
+                # Mengambil data seluruh topik dan disort berdasarkan nama
                 result = Topics.objects.all().order_by('topic_name')
 
+                # Pagination
                 page = request.GET.get('page', 1)
                 paginator = Paginator(result, 6)
 
@@ -39,9 +44,12 @@ def index(request):
 
                 return render(request, 'topic/topic_filter.html', {'users': users, 'chk':chk[0]})
             
+            # Sort berdasarkan citations
             elif chk[0]=='sortcitations':
+                # Mengambil data seluruh topik dan disort berdasarkan jumlah sitasi
                 result = Topics.objects.all().order_by('-total_cite')
 
+                # Pagination
                 page = request.GET.get('page', 1)
                 paginator = Paginator(result, 6)
 
@@ -54,9 +62,12 @@ def index(request):
 
                 return render(request, 'topic/topic_filter.html', {'users': users, 'chk':chk[0]})
 
+            # Sort berdasarkan publications
             elif chk[0]=='sortpublications':
+                # Mengambil data seluruh topik dan disort berdasarkan jumlah publikasi
                 result = Topics.objects.all().order_by('-total_publication')
 
+                # Publikasi
                 page = request.GET.get('page', 1)
                 paginator = Paginator(result, 6)
 
@@ -69,9 +80,12 @@ def index(request):
 
                 return render(request, 'topic/topic_filter.html', {'users': users, 'chk':chk[0]})
 
+            # Sort berdasarkan authors
             elif chk[0]=='sortauthors':
+                # Mengambil data seluruh topik dan disort berdasarkan jumlah author
                 result = Topics.objects.all().order_by('-total_author')
 
+                # Pagination
                 page = request.GET.get('page', 1)
                 paginator = Paginator(result, 6)
 
@@ -84,9 +98,12 @@ def index(request):
 
                 return render(request, 'topic/topic_filter.html', {'users': users, 'chk':chk[0]})
 
+        # Jika tidak ada sort maka akan masuk ke dalam sini
         else:
+            # Mengambil data seluruh topik dan disort berdasarkan jumlah publikasi (default)
             result = Topics.objects.all().order_by('-total_publication')
 
+            # Pagination
             page = request.GET.get('page', 1)
             paginator = Paginator(result, 6)
 
@@ -99,10 +116,14 @@ def index(request):
 
             return render(request, 'topic/topic.html', {'users': users})
 
+    # Request POST disini digunakan untuk fitur search topik
     elif request.method == 'POST':
+        # Mengambil data yang ingin disearch oleh user
         catch = request.POST['topic']
+        # Mengambil data topik sesuai hasil search
         result = Topics.objects.filter(topic_name__icontains=catch)
 
+        # Pagination
         page = request.GET.get('page', 1)
         paginator = Paginator(result, 6)
 
@@ -116,13 +137,20 @@ def index(request):
         return render(request, 'topic/topic.html', {'users': users})
 
 def show_detailtopic(request, *args, **kwargs):
+    # Untuk request GET dan tidak ada filter apa-apa
     if request.method == 'GET':
+        # Mengambil id topik dari URL
         topic_id = kwargs['id_topic']
+        # Mengambil data topik berdasarkan id topik yang didapatkan
         topic = Topics.objects.get(id_topic=topic_id)
+
+        # Mengambil paper-paper yang memiliki topik terkait
         paper = Papers.objects.filter(topic=topic_id)[:20]
 
+        # Mengambil author-author yang memiliki topik dominan yang sama dengan topik terkait dan diurutkan berdasarkan jumlah publikasi author di topik terkait
         author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
         
+        # Pagination
         page = request.GET.get('page', 1)
         paginator = Paginator(paper, 4)
 
@@ -134,7 +162,8 @@ def show_detailtopic(request, *args, **kwargs):
             users = paginator.page(paginator.num_pages)
 
         subtopik=topic.topik_subtopik.all()
-
+        
+        # Untuk legend SVG
         namatopik = []
         for i in subtopik:
             namatopik.append(i.subtopic_name)
@@ -152,14 +181,21 @@ def show_detailtopic(request, *args, **kwargs):
         data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
         return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2, 'legend':zipped})
     
+    # Jika ada filter subtopik terhadap paper
     else:
+        # Mengambil data subtopik yang ingin difilter terhadap paper
         catch = request.POST['id_subtopik']
-        topic_id = kwargs['id_topic']
-        print('ini adalah catch:', len(catch))
 
+        # Mengambil id topik dari URL
+        topic_id = kwargs['id_topic']
+
+        # Mengambil data topik berdasarkan id topik yang didapatkan
         topic = Topics.objects.get(id_topic=topic_id)
+
+        # Mengambil paper-paper yang memiliki topik terkait dan yang sudah difilter berdasarkan subtopik
         paper = Papers.objects.filter(topic=topic_id, id_subtopic=catch)[:20]
 
+        # Mengambil author-author yang memiliki topik dominan yang sama dengan topik terkait dan diurutkan berdasarkan jumlah publikasi author di topik terkait
         author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
         
         page = request.GET.get('page', 1)
@@ -174,6 +210,7 @@ def show_detailtopic(request, *args, **kwargs):
 
         subtopik=topic.topik_subtopik.all()
 
+        # Untuk legend SVG
         namatopik = []
         for i in subtopik:
             namatopik.append(i.subtopic_name)
@@ -187,24 +224,29 @@ def show_detailtopic(request, *args, **kwargs):
         # bisa dipilih dulu subtopik yang mau di gambar apa aja sebelum panggil fungsi svg_sub
         data_akhir=SVG_sub(subtopik.values_list('id_SubTopic'))
 
-        
-
         ##sumcount
         data_sumcount, data_sumcount2=getData_sumcount_topik(topic_id)
         return render(request, 'topic/detail_topic.html', {'topics': topic, 'users': users,'data':data_akhir, 'author': author,'data_sumcount':data_sumcount, 'subtopik': subtopik, 'data_sumcount2':data_sumcount2, 'legend':zipped})
 
 def show_detailtopicupdate(request, *args, **kwargs):
+    # Jika ada filter subtopik terhadap visualisasi SVG
     if request.method=='POST':
+        # Mengambil list subtopik yang ingin divisualisasikan
         chk = request.POST.getlist('subtopik')
 
-        print('ini adalah chk', chk)
-
+        # Mengambil id topik dari URL
         topic_id = kwargs['id_topic']
+
+        # Mengambil data topik berdasarkan id topik yang didapatkan
         topic = Topics.objects.get(id_topic=topic_id)
+
+        # Mengambil paper-paper yang memiliki topik terkait
         paper = Papers.objects.filter(topic=topic_id)[:20]
 
+        # Mengambil author-author yang memiliki topik dominan yang sama dengan topik terkait dan diurutkan berdasarkan jumlah publikasi author di topik terkait
         author = Authors.objects.filter(topik_dominan1=topic_id).order_by('-nilai_dominan1')[:4]
         
+        # Pagination
         page = request.GET.get('page', 1)
         paginator = Paginator(paper, 4)
 
@@ -219,6 +261,7 @@ def show_detailtopicupdate(request, *args, **kwargs):
 
         subtopik=topic.topik_subtopik.all()
 
+        # Untuk legend SVG
         namatopik = []
         for i in subtop:
             namatopik.append(i.subtopic_name)

@@ -86,3 +86,15 @@ class Data_sumcount_author(models.Model):
     id_pub = models.CharField(max_length=25)
     class Meta:
         db_table = "data_sum_count_author" 
+
+class Dyna_prod(models.Model):
+    id_dyna_prod = models.CharField(max_length=20, primary_key=True)
+    nidn = models.CharField(max_length=25)
+    id_topic = models.CharField(max_length=20)
+    F2rep = models.FloatField()
+    F3sum = models.FloatField()
+    F4min = models.FloatField()
+    F5end = models.FloatField()
+
+    class Meta:
+        db_table = "dyna_prod"

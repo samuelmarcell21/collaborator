@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<style>
+
+    .search{
+        margin: 40px;
+        margin-top: 0 !important;
+        display: grid;
+        grid-template-areas: 
+        'topauthor topaffi topcited'
+        'recomauthor recompaper recompaper';
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+    }
+
+    .topauthor{
+        grid-area: topauthor;
+        border: 1px solid black;
+        padding: 20px;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+    }
+
+    h6{
+        color: #013880;
+        margin: 0 !important;
+        margin-bottom: 15px !important;
+    }
+
+    .topauthor .author{
+        background-color: white;
+        width: 100%;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .topauthor .justcenter2 img{
+        margin-right: 3px !important;
+    }
+
+    .topaffi{
+        grid-area: topaffi;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .topaffi .affiliation{
+        background-color: white;
+        width: 100%;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .topaffi .justcenter2 img{
+        margin-right: 3px !important;
+    }
+
+    .topcited{
+        grid-area: topcited;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .topcited .paper{
+        background-color: white;
+        width: 100%;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .recomauthor{
+        grid-area: recomauthor;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .recomauthor .author{
+        background-color: white;
+        width: 100%;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .recomauthor .justcenter2 img{
+        margin-right: 3px !important;
+    }
+
+    .recompaper{
+        grid-area: recompaper;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .recompaper .paper{
+        background-color: white;
+        width: 48%;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .recompaper .paperflex{
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    p{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    @media(max-width:1200px){
+        .search{
+            grid-template-areas: 
+            'recomauthor topauthor'
+            'recomauthor topaffi'
+            'recomauthor topcited'
+            'recompaper recompaper';
+
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media(max-width:800px){
+        .search{
+            grid-template-areas: 
+            'topauthor'
+            'topaffi'
+            'topcited'
+            'recomauthor'
+            'recompaper';
+
+            grid-template-columns: 1fr;
+        }
+
+        .recompaper .paper{
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<h4 style="padding: 40px; color:#013880; margin-bottom: 0 !important">
+    <strong>"{{ catch }}" classified into  {{ topik.topic_name }}'s Topic</strong>
+</h4>
+
+<div class="search">
+    <div class="topauthor">
+        <h6>
+            <strong> Top {{ topik.topic_name }} Author </strong>
+        </h6>
+        <div class="author">
+            {% for authors in authors %}   
+            <div class="justcenter" style="display: flex; justify-content: flex-start; flex-wrap:wrap; align-items:center">
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
+                <div class="info-detail-author" style="margin-left: 15px;">
+                    <a href="{{ authors.nidn }}" style="color: #013880;">
+                        <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
+                    </a>
+                    <p style="font-size:14px;"> <strong> {{ authors.univ.name }} </strong></p>
+                    <p style="font-size:14px;">nidn  <strong> {{ authors.nidn }} </strong>  h-index <strong> {{ authors.h_index }} </strong> </p>
+                </div>
+            </div>
+            <div class="justcenter2" style="display: flex; justify-content:space-between; flex-wrap:wrap; margin-top:15px;">
+                <div class="logo-topik1" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
+                </div>
+                <div class="logo-topik2" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px; " src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan2.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan2 }} Publications</p>
+                </div>
+                <div class="logo-topik3" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan3.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan3 }} Publications</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="topaffi">
+        <h6>
+            <strong> Top {{ topik.topic_name }} Affiliation </strong>
+        </h6>
+        <div class="affiliation">
+            {% for affiliations in affiliations %}   
+            <div class="justcenter" style="display: flex; justify-content: flex-start; flex-wrap:wrap; align-items:center">
+                <img style="width:90px; height:90px;" src="{% static 'author/img/'|add:affiliations.id_univ|add:'.png' %}" alt="Logo Afiliasi">
+                <div class="info-detail-affiliation" style="margin-left: 15px;">
+                    <a href="/affiliation/{{ affiliations.id_univ }}" style="color: #013880;">
+                        <p style="font-size:20px;"> <strong> {{ affiliations.name }} </strong></p>
+                    </a>
+                    <p style="margin-bottom:5px;">
+                        <i class="fas fa-user"></i> 
+                        <strong style="font-size: 14px;"> {{ affiliations.total_author }} </strong>
+                        Authors
+                        &nbsp;
+                        &nbsp;
+                        <i class="far fa-newspaper"></i>
+                        <strong style="font-size: 14px;"> {{ affiliations.total_publication }} </strong>
+                        Publications
+                        </p> 
+                        <p>
+                        <i class="fas fa-quote-left"></i>
+                        <strong style="font-size: 14px;"> {{ affiliations.total_cite }} </strong>
+                        Citations
+                        </p>
+                </div>
+            </div>
+            <div class="justcenter2" style="display: flex; justify-content:space-between; flex-wrap:wrap; margin-top:15px;">
+                <div class="logo-topik1" style="display: flex; align-items: center;">
+                    <img style="width:25px; height:25px;" src="{% static 'author/img/'|add:'topik'|add:affiliations.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ affiliations.nilai_dominan1 }} Publications</p>
+                </div>
+                <div class="logo-topik2" style="display: flex; align-items: center;">
+                    <img style="width:25px; height:25px; " src="{% static 'author/img/'|add:'topik'|add:affiliations.topik_dominan2.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ affiliations.nilai_dominan2 }} Publications</p>
+                </div>
+                <div class="logo-topik3" style="display: flex; align-items: center;">
+                    <img style="width:25px; height:25px;" src="{% static 'author/img/'|add:'topik'|add:affiliations.topik_dominan3.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ affiliations.nilai_dominan3 }} Publications</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="topcited">
+        <h6>
+            <strong> Top {{ topik.topic_name }} Paper </strong>
+        </h6>
+        <div class="paper">
+            {% for paper in papers %}
+            <p style="font-size:18px; color: #013880; margin-bottom:5px !important;"> <strong> {{ paper.title }} </strong> </p>
+            <p style="margin-bottom:5px !important; font-size:14px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
+            <img style="width:27px; height:27px; margin-right: 10px !important;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+            <p style="font-size:14px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="recomauthor">
+        <h6>
+            <strong> Author Recommendation Based on Title </strong>
+        </h6>
+        {% for authors in author %}
+        <div class="author">
+            <div class="justcenter" style="display: flex; justify-content: flex-start; flex-wrap:wrap; align-items:center">
+                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:90px; height:90px; border-radius: 50%;">
+                <div class="info-detail-author" style="margin-left: 15px;">
+                    <a href="{{ authors.nidn }}" style="color: #013880;">
+                        <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
+                    </a>
+                    <p style="font-size:14px;"> <strong> {{ authors.univ.name }} </strong></p>
+                    <p style="font-size:14px;">nidn  <strong> {{ authors.nidn }} </strong>  h-index <strong> {{ authors.h_index }} </strong> </p>
+                </div>
+            </div>
+            <div class="justcenter2" style="display: flex; justify-content:space-between; flex-wrap:wrap; margin-top:15px;">
+                <div class="logo-topik1" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
+                </div>
+                <div class="logo-topik2" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px; " src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan2.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan2 }} Publications</p>
+                </div>
+                <div class="logo-topik3" style="display: flex; align-items: center;">
+                    <img style="width:30px; height:30px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan3.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                    <p style="font-size:12px; color: #013880;"> {{ authors.nilai_dominan3 }} Publications</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="recompaper">
+        <h6>
+            <strong> Paper Recommendation Based on Title </strong>
+        </h6>
+        <div class="paperflex">
+            {% for paper in user_list %}
+            <div class="paper">
+                <p style="font-size:14px; color: #013880; margin-bottom:5px !important;"> <strong> {{ paper.title }} </strong> </p>
+                <p style="margin-bottom:5px !important; font-size:14px;"> {{ paper.year }} &nbsp; &nbsp; {{ paper.authors }}</p>
+                <img style="width:27px; height:27px; margin-right: 10px !important;" src="{% static 'author/img/'|add:'topik'|add:paper.topic.id_topic|add:'.png' %}" style="position: relative; float:left;" alt="Logo Topik Dominan 1">
+                <p style="font-size:14px; color: #013880;  outline-style: solid; outline-color:black; outline-offset:2px; display:inline-block; outline-width:1px; margin-left:10px;"> {{ paper.topic.topic_name }} </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer id="page-footer" class="bg-white opacity-0" style="opacity: 1;">
+    <div class="content py-20 font-size-xs clearfix">
+        <div class="float-left" style="padding-top: 40px">
+            <div class="info">© 2020 Institut Teknologi Sepuluh Nopember</div>
+        </div>
+        <div class="float-right">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/Logo-its.png 2x, https://my.its.ac.id/assets/media/img/Logo-its.png 1x" src="https://my.its.ac.id/assets/media/img/Logo-its.png" alt="Logo ITS" class="dark-logo mr-2" width="100px">
+            <img srcset="https://my.its.ac.id/assets/media/img/@2x/logo-ITSsemangatbaru.png 2x, https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png 1x" src="https://my.its.ac.id/assets/media/img/logo-ITSsemangatbaru.png" width="100px" alt="Logo ITS Semangat Baru" class="dark-logo">
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
