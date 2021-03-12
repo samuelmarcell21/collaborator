@@ -134,21 +134,45 @@
             </form>
         </div>
         {% load static %}
-        <div class="author" style="width:82%; display:flex; flex-wrap:wrap; justify-content:flex-end;">
+        <div class="author" style="width:82%; display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:flex-start;">
             {% for authors in users %}
             <div class="buatmargin" style="box-shadow: 1px 1px 8px gray; background-color:white; width: 480px; text-align:left; padding:20px; margin-bottom:50px; margin-right:30px; border-radius:30px;">
                 
                 <div class="justcenter" style="display: flex; justify-content: flex-start; flex-wrap:wrap; align-items:center">
-                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:100px; height:100px; border-radius: 50%;">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" style="width:70px; height:70px; border-radius: 50%;">
                     <div class="info-detail-author" style="margin-left: 20px;">
                         <a href="{{ authors.nidn }}" style="color: #013880;">
                             <p style="font-size:20px;"> <strong> {{ authors.name }} </strong></p>
                         </a>
                         <p style="font-size:18px;"> <strong> {{ authors.univ.name }} </strong></p>
-                        <p style="font-size:18px;">nidn  <strong> {{ authors.nidn }} </strong>  h-index <strong> {{ authors.h_index }} </strong> </p>
+                        <p style="font-size:18px;">nidn  <strong> {{ authors.nidn }} </strong> {% if not authors.h_index %} {% else %}  h-index <strong> {{ authors.h_index }} </strong> {% endif %} </p>
                     </div>
                 </div>
 
+                {% if not authors.topik_dominan1 and not authors.topik_dominan2 and not authors.topik_dominan3 %}
+                
+
+                {% elif not authors.topik_dominan2 and not authors.topik_dominan3 %}
+                <div class="justcenter2" style="display: flex; justify-content:flex-start; flex-wrap:wrap">
+                    <div class="logo-topik1" style="display: flex; align-items: center;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
+                    </div>
+                </div>
+
+                {% elif not authors.topik_dominan3 %}
+                <div class="justcenter2" style="display: flex; justify-content:flex-start; flex-wrap:wrap; flex-direction:row">
+                    <div class="logo-topik1" style="display: flex; align-items: center; margin-right: 15px !important;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan1.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan1 }} Publications</p>
+                    </div>
+                    <div class="logo-topik2" style="display: flex; align-items: center;">
+                        <img style="width:40px; height:40px; margin-right: 10px;" src="{% static 'author/img/'|add:'topik'|add:authors.topik_dominan2.id_topic|add:'.png' %}" alt="Logo Topik Dominan 1">
+                        <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan2 }} Publications</p>
+                    </div>
+                </div>
+
+                {% else %}
 
                 <div class="justcenter2" style="display: flex; justify-content:space-between; flex-wrap:wrap">
                     <div class="logo-topik1" style="display: flex; align-items: center;">
@@ -164,11 +188,13 @@
                         <p style="font-size:13px; color: #013880;"> {{ authors.nilai_dominan3 }} Publications</p>
                     </div>
                 </div>
+
+                {% endif %}
+
             </div>
             {% endfor %}
         </div>
     </div>
-</div>
 
 <footer id="page-footer" class="bg-white opacity-0" style="opacity: 1;">
     <div class="content py-20 font-size-xs clearfix">

@@ -216,7 +216,7 @@
                         {{ author.univ.name }}
                     </p>
                     <p>
-                        <span><i class="far fa-newspaper"></i> {{ countpub }} </span> Publications &nbsp; &nbsp; <span><i class="fas fa-quote-left"></i> {{ sumcite }} </span> Citations
+                        <span><i class="far fa-newspaper"></i> {{ countpub }} </span> Publications &nbsp; &nbsp; {% if not author.citations %} {% else %} <span><i class="fas fa-quote-left"></i> {{ author.citations }} </span> Citations {% endif %}
                     </p>
                     <p style="margin-top: 10px !important;">
                         <a href="/topic/{{ author.topik_dominan1.id_topic }}">
@@ -484,40 +484,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
 
 <script>
-    {% comment %} new Chart(document.getElementById("doughnut-chart"), {
-        type: 'pie',
-        data: {
-        labels: ["{{author.topik_dominan1.topic_name}}", "{{author.topik_dominan2.topic_name}}", "{{author.topik_dominan3.topic_name}}",],
-        datasets: [{
-            label: "Jumlah Publikasi Berdasarkan Topik",
-            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f",],
-            data: [{{author.nilai_dominan1}},{{author.nilai_dominan2}},{{author.nilai_dominan3}}]
-        }]
-        },
-        options: {
-        title: {
-            display: true,
-            text: 'Jumlah Publikasi Berdasarkan topik'
-        }
-        }
-    });
-    new Chart(document.getElementById("polar-chart"), {
-        type: 'polarArea',
-        data: {
-        labels: ["{{author.topik_dominan1.topic_name}}", "{{author.topik_dominan2.topic_name}}", "{{author.topik_dominan3.topic_name}}",],
-        datasets: [{
-            label: "Publikasi Topik Terbanyak 3 tahun terakhir",
-            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f",],
-            data: [{{author.nilai_dominan1}},{{author.nilai_dominan2}},{{author.nilai_dominan3}}]
-        }]
-        },
-        options: {
-        title: {
-            display: true,
-            text: 'Publikasi Topik Terbanyak 3 tahun terakhir'
-        }
-        }
-    }); {% endcomment %}
 
     new Chart(document.getElementById("mixed-chart"), {
     type: 'bar',

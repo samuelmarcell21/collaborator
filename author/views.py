@@ -104,7 +104,9 @@ def show_detailauthor(request, *args, **kwargs):
             nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
             # Mengambil data paper dari author tersebut
-            paper = paper_author.filter(author=nidn_author)[:25]
+            paper = paper_author.filter(author=nidn_author).order_by('-cite')[:25]
+
+            papers = paper_author.filter(author=nidn_author)
 
             # Pagination
             page = request.GET.get('page', 1)
@@ -149,7 +151,7 @@ def show_detailauthor(request, *args, **kwargs):
 
             rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
 
-            return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+            return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':papers.count(),'sumcite':int(sumcite['cite__sum']),
             'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
             , 'filter': filter})
         
@@ -172,7 +174,9 @@ def show_detailauthor(request, *args, **kwargs):
                 nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
                 # Mengambil data paper dari author tersebut
-                paper = paper_author.filter(author=nidn_author)[:25]
+                paper = paper_author.filter(author=nidn_author).order_by('-cite')[:25]
+
+                papers = paper_author.filter(author=nidn_author)
 
                 # Pagination
                 page = request.GET.get('page', 1)
@@ -226,7 +230,7 @@ def show_detailauthor(request, *args, **kwargs):
                 # Variabel rekomen_author digantikan berdasarkan hasil filter
                 rekomen_author = Authors.objects.filter(nidn__in=nidn_author)
 
-                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':papers.count(),'sumcite':int(sumcite['cite__sum']),
                 'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
                 , 'filter': filter})
             
@@ -248,7 +252,9 @@ def show_detailauthor(request, *args, **kwargs):
                 nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
                 # Mengambil data paper dari author tersebut
-                paper = paper_author.filter(author=nidn_author)[:25]
+                paper = paper_author.filter(author=nidn_author).order_by('-cite')[:25]
+
+                papers = paper_author.filter(author=nidn_author)
 
                 # Pagination
                 page = request.GET.get('page', 1)
@@ -302,7 +308,7 @@ def show_detailauthor(request, *args, **kwargs):
                 # Variabel rekomen_author digantikan berdasarkan hasil filter
                 rekomen_author = Authors.objects.filter(nidn__in=nidn_author)
 
-                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+                return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':papers.count(),'sumcite':int(sumcite['cite__sum']),
                 'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
                 , 'filter': filter})
 
@@ -326,7 +332,9 @@ def show_detailauthor(request, *args, **kwargs):
         nama_topik = Topics.objects.filter(id_topic__in=topik).order_by('topic_name')
 
         # Mengambil data paper dari author tersebut
-        paper = paper_author.filter(author=nidn_author, topic=catch)[:25]
+        paper = paper_author.filter(author=nidn_author, topic=catch).order_by('-cite')[:25]
+
+        papers = paper_author.filter(author=nidn_author)
 
         # Pagination
         page = request.GET.get('page', 1)
@@ -372,7 +380,7 @@ def show_detailauthor(request, *args, **kwargs):
         # Variabel rekomen_author berdasarkan topik dominan 1 author terkait
         rekomen_author = Authors.objects.filter(topik_dominan1=author.topik_dominan1_id).order_by('-nilai_dominan1')[:4]
 
-        return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':paper.count(),'sumcite':int(sumcite['cite__sum']),
+        return render(request, 'author/detail_author.html', {'users': users, 'author': author,'countpub':papers.count(),'sumcite':int(sumcite['cite__sum']),
         'data_count':list_count,'data_sum':list_sum, 'nama_topik': nama_topik, 'rekomen_author':rekomen_author, 'topik1_data':topik1_data, 'topik2_data':topik2_data, 'topik3_data':topik3_data, 'score_consistency': consistency , 'score_exploration':exploration
         , 'filter': filter})
 

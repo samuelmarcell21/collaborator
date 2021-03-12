@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'pdupt_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pdupt',
+        'NAME': 'behavexc_pdupt',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',

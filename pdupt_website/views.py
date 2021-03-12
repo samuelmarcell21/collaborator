@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 
 from author.models import Papers, Authors
 from topic.models import Topics, Data_sumcount_topic
-from affiliation.models import Affiliations
+from affiliation.models import Affiliations, Data_sumcount_univ
 
 
 from django.shortcuts import render
@@ -17,6 +17,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import operator
 
+from django.db.models import Sum
 
 # Untuk Search
 import re
@@ -75,6 +76,7 @@ warna=['#2d97ab', '#ed164f', '#72801b', '#755e5c', '#e9ce86', '#8851d2', '#ccbd7
 
 def index(request):
     if request.method=='GET':
+
         topic = Topics.objects.all().order_by('-total_publication')[:3]
         topik = []
         for i in topic:
@@ -216,53 +218,37 @@ def search(request):
 
         topic_obj = Topics.objects.get(id_topic=topic)
 
-        print(topic_obj)
+        sumcountuniv = Data_sumcount_univ.objects.filter(topic=topic).values('univ').annotate(total_price=Sum('pubcount')).order_by('-total_price')[:1]
 
-        page = request.GET.get('page', 1)
-        paginator = Paginator(user_list, 10)
+        topaffi = []
+        for i in sumcountuniv:
+            topaffi.append(i['univ'])
+
+        affiliations = Affiliations.objects.filter(id_univ=topaffi[0])
+
+        authors = Authors.objects.filter(topik_dominan1=topic).order_by('-nilai_dominan1')[:1]
+
+        papers = Papers.objects.filter(topic=topic).order_by('-cite')[:1]
+
+        print(affiliations)
 
         global author_rekomen
         author_rekomen = Authors.objects.filter(topik_dominan1=topic).order_by('-nilai_dominan1')[:4]
 
         global users
-
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
         
         context = {
             'title': 'Halaman Utama',
             'topik': topic_obj,
             'catch': catch,
-            'users' : users,
             'author': author_rekomen,
             'user_list': user_list,
+            'affiliations': affiliations,
+            'authors': authors,
+            'papers': papers
         }
 
-        return render(request, 'search.html', context)
-    
-    else:
-        page = request.GET.get('page', 1)
-        paginator = Paginator(user_list, 10)
-
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
-        
-        context = {
-            'users' : users,
-            'catch': catch,
-            'author': author_rekomen,
-            'topic_obj': topic_obj,
-        }
-
-        return render(request, 'search.html', context)
+        return render(request, 'hasilsearch.html', context)
 
 # fungsi svg
 #fungsi scaling kolom batas atas
@@ -597,10 +583,10 @@ def getData_sumcount_topik(top):
 
 def rekomendasi(input):
     data = [input]
-    id2word = Dictionary.load('pdupt_responsive/id2word_new.dict')
-    corpus = MmCorpus('pdupt_responsive/corpus_new.mm')
-    df = pd.read_csv('pdupt_responsive/reduksifix.csv')
-    with open("pdupt_responsive/lemma_new.txt", "rb") as fp:   #Pickling
+    id2word = Dictionary.load('pdupt_website/id2word_new.dict')
+    corpus = MmCorpus('pdupt_website/corpus_new.mm')
+    df = pd.read_csv('pdupt_website/reduksifix.csv')
+    with open("pdupt_website/lemma_new.txt", "rb") as fp:   #Pickling
         data_lemmatized=pickle.load(fp)
     stop_words = stopwords.words('indonesian')
     stop_words2 = stopwords.words('english')
@@ -670,7 +656,7 @@ def rekomendasi(input):
             data_lemmatized_search[x][y] = stemmer.stem(data_lemmatized_search[x][y])
 
             # import gensim
-    model = gensim.models.ldamodel.LdaModel.load('pdupt_responsive/mallet_18_lda.mdl', mmap='r') 
+    model = gensim.models.ldamodel.LdaModel.load('pdupt_website/mallet_18_lda.mdl', mmap='r') 
     new_doc_bow = id2word.doc2bow(data_lemmatized_search[0])
     hasil = model.get_document_topics(new_doc_bow)
 

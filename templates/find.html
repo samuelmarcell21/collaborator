@@ -222,7 +222,7 @@
                     <div>
                         <p class="affi-name" style="margin-bottom: 0 !important;"><strong> {{ author_1.name }} </strong></p>
                         <p style="font-size: 12px; margin-bottom:0px; margin-top:0px;"> <strong>{{ author_1.nilai_dominan1 }} Publications </strong> </p>
-                        <p style="font-size: 12px;"> <strong>{{ author_1.citations }} Citations </strong> </p>
+                        {% if not author_1.citations %} {% else %} <p style="font-size: 12px;"> <strong>{{ author_1.citations }} Citations </strong> </p> {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -254,7 +254,7 @@
                     <div>
                         <p class="affi-name" style="margin-bottom: 0 !important;"><strong> {{ author_2.name }} </strong></p>
                         <p style="font-size: 12px; margin-bottom:0px; margin-top:0px;"> <strong>{{ author_2.nilai_dominan1 }} Publications </strong> </p>
-                        <p style="font-size: 12px;"> <strong>{{ author_2.citations }} Citations </strong> </p>
+                        {% if not author_2.citations %} {% else %} <p style="font-size: 12px;"> <strong>{{ author_2.citations }} Citations </strong> </p> {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -286,7 +286,7 @@
                     <div>
                         <p class="affi-name" style="margin-bottom: 0 !important;"><strong> {{ author_3.name }} </strong></p>
                         <p style="font-size: 12px; margin-bottom:0px; margin-top:0px;"> <strong>{{ author_3.nilai_dominan1 }} Publications </strong> </p>
-                        <p style="font-size: 12px;"> <strong>{{ author_3.citations }} Citations </strong> </p>
+                        {% if not author_3.citations %} {% else %} <p style="font-size: 12px;"> <strong>{{ author_3.citations }} Citations </strong> </p> {% endif %}
                     </div>
                 </div>
                 {% endfor %}
